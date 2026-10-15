@@ -56,8 +56,8 @@ const servicios = [
   {
     id: 'productos',
     icono: 'hoja',
-    nombre: 'Productos naturales de alivio',
-    resumen: 'Tés, cremas y compresas seleccionados para los días difíciles.',
+    nombre: 'Productos de alivio y bienestar',
+    resumen: 'Kit menstrual, gel térmico, faja térmica y té rojo para los días difíciles.',
     detalle:
       'Cada producto pasa por revisión antes de llegar a ti: buscamos alivio real, no promesas de etiqueta.',
     destacado: true,

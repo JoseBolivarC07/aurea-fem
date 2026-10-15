@@ -34,7 +34,8 @@ function catalogoComoTexto() {
   return productos
     .map(
       (p) =>
-        `- ${p.nombre} (${p.formato}, ${p.precio.toLocaleString('es-CO')} COP): ${p.resumen} Indicado para: ${p.etapas.join(', ')}.`
+        `- ${p.nombre} (${p.formato}, ${p.precio.toLocaleString('es-CO')} COP): ${p.resumen} ${p.detalle}` +
+        (p.etapas.length > 0 ? ` Indicado para: ${p.etapas.join(', ')}.` : '')
     )
     .join('\n');
 }

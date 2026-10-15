@@ -23,7 +23,6 @@ process.env.GEMINI_API_KEY = '';
 const config = require('../src/config');
 const createServer = require('../src/server');
 const { brand } = require('../src/app/models/site.model');
-const { categorias } = require('../src/app/models/producto.model');
 
 const BASE = (process.env.BASE_PATH || '/aurea-fem').replace(/\/+$/, '');
 const OUT = path.join(config.paths.root, 'dist');
@@ -33,26 +32,15 @@ const PAGINAS = [
   { ruta: '/nosotras', archivo: 'nosotras/index.html' },
   { ruta: '/servicios', archivo: 'servicios/index.html' },
   { ruta: '/productos', archivo: 'productos/index.html' },
-  ...categorias
-    .filter((categoria) => categoria.id !== 'todos')
-    .map((categoria) => ({
-      ruta: `/productos?categoria=${categoria.id}`,
-      archivo: `productos/${categoria.id}/index.html`,
-    })),
   { ruta: '/contacto', archivo: 'contacto/index.html' },
   { ruta: '/pagina-inexistente', archivo: '404.html', estado: 404 },
 ];
 
-/** Traduce una ruta del servidor ("/productos?categoria=x") a su archivo publicado. */
+/** Traduce una ruta del servidor ("/servicios#embarazo") a su archivo publicado. */
 function rutaPublica(original) {
   const [, ruta, consulta = '', ancla = ''] = original.match(/^([^?#]*)(\?[^#]*)?(#.*)?$/);
 
   if (/\.[a-z0-9]+$/i.test(ruta)) return BASE + ruta + consulta + ancla;
-
-  const categoria = new URLSearchParams(consulta).get('categoria');
-  if (ruta === '/productos' && categoria && categoria !== 'todos') {
-    return `${BASE}/productos/${categoria}/${ancla}`;
-  }
 
   return `${BASE}${ruta.replace(/\/?$/, '/')}${ancla}`;
 }

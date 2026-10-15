@@ -5,56 +5,29 @@
 
   Cuatro secciones:
     1. Encabezado → titular y presentación
-    2. Catálogo   → filtros por categoría y rejilla de productos
+    2. Catálogo   → rejilla de productos con su foto
     3. Aviso      → advertencia sanitaria sobre el uso de los productos
     4. Llamado    → invitación a consultarle a Aura
-
-  DETALLE IMPORTANTE — los filtros son ENLACES, no botones
-  Cada filtro apunta a `/productos?categoria=xxx` y el servidor devuelve la
-  página ya filtrada. La alternativa (ocultar tarjetas con JavaScript) sería
-  más rápida, pero perdería tres cosas: el enlace no se podría compartir, el
-  botón "atrás" no funcionaría, y sin JavaScript no habría filtros.
 
   Estilos exclusivos: `/css/views/productos.css`
 #%>
 <%- include('partials/encabezado-pagina', {
       paginaEtiqueta: 'Productos',
       paginaTitulo: 'Bienestar seleccionado, no improvisado',
-      paginaTexto: 'Tés, cremas, compresas y diarios elegidos para acompañar el cuerpo en los días en que más se siente. Cada referencia se revisa antes de entrar al catálogo.'
+      paginaTexto: 'Calor, calma y cuidado para los días en que el cuerpo más se siente. Cada referencia se revisa antes de entrar al catálogo.'
     }) %>
 
 
 <section class="catalogo">
   <div class="contenedor">
 
-    <nav class="filtros" aria-label="Filtrar el catálogo por categoría">
-      <% categorias.forEach(function (categoria) { %>
-      <a class="filtro<%= categoria.id === categoriaActiva ? ' es-activo' : '' %>"
-         href="/productos?categoria=<%= categoria.id %>"
-         <%= categoria.id === categoriaActiva ? 'aria-current="true"' : '' %>><%= categoria.nombre %></a>
-      <% }); %>
-    </nav>
-
-    <p class="catalogo__conteo" data-conteo>
-      <%= productos.length %> <%= productos.length === 1 ? 'producto' : 'productos' %>
-    </p>
-
     <div class="catalogo__rejilla">
       <% productos.forEach(function (producto, indice) { %>
-      <article class="producto" data-revelar style="--retardo: <%= indice % 3 %>">
+      <article class="producto" data-revelar style="--retardo: <%= indice % 4 %>">
 
-        <%# Imagen del producto. Como todavía no hay fotografías reales, se
-            dibuja un halo con la paleta de marca y el icono de su familia.
-            Se ve intencional en vez de dejar un hueco gris.
-
-            El operador ternario encadenado elige el icono según la
-            categoría: papelería → diario, confort → corazón, resto → hoja.
-            Cuando existan las fotos, esto se cambia por un <img>. %>
-        <div class="producto__figura" aria-hidden="true">
-          <span class="producto__halo"></span>
-          <svg class="icono">
-            <use href="#i-<%= producto.categoria === 'papeleria' ? 'diario' : producto.categoria === 'confort' ? 'corazon' : 'hoja' %>"></use>
-          </svg>
+        <div class="producto__figura">
+          <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>"
+               width="800" height="600" loading="lazy" decoding="async">
         </div>
 
         <div class="producto__cuerpo">
@@ -63,12 +36,14 @@
           <p class="producto__resumen"><%= producto.resumen %></p>
           <p class="producto__detalle"><%= producto.detalle %></p>
 
+          <% if (producto.etapas.length > 0) { %>
           <ul class="producto__etapas">
             <% producto.etapas.forEach(function (etapaId) {
                  const etapa = etapas.find(function (e) { return e.id === etapaId; }); %>
             <li class="marca-etapa"><%= etapa ? etapa.nombre : etapaId %></li>
             <% }); %>
           </ul>
+          <% } %>
         </div>
 
         <footer class="producto__pie">
@@ -82,10 +57,6 @@
       </article>
       <% }); %>
     </div>
-
-    <% if (productos.length === 0) { %>
-    <p class="catalogo__vacio">No hay productos en esta categoría por ahora.</p>
-    <% } %>
 
   </div>
 </section>

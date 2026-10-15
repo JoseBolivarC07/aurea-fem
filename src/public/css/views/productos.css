@@ -2,55 +2,19 @@
    Vista: Productos
    ========================================================================== */
 
-/* ---- Filtros por categoría ----------------------------------------------- */
-.filtros {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--espacio-2);
-  padding-bottom: var(--espacio-6);
-  border-bottom: 1px solid var(--color-borde-suave);
-}
-
-.filtro {
-  padding: 0.55rem var(--espacio-5);
-  font-size: var(--texto-sm);
-  font-weight: 500;
-  color: var(--color-tinta-media);
-  background-color: var(--color-superficie);
-  border: 1px solid var(--color-borde-suave);
-  border-radius: var(--radio-completo);
-  transition:
-    background-color var(--transicion),
-    border-color var(--transicion),
-    color var(--transicion),
-    transform var(--transicion-rapida);
-}
-
-.filtro:hover {
-  border-color: var(--color-borde-fuerte);
-  color: var(--color-primario);
-  transform: translateY(-2px);
-}
-
-.filtro.es-activo {
-  background-color: var(--color-primario);
-  border-color: var(--color-primario);
-  color: #fff;
-}
-
-.catalogo__conteo {
-  margin-block: var(--espacio-5) var(--espacio-8);
-  font-size: var(--texto-sm);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--color-tinta-suave);
-}
-
-/* ---- Rejilla del catálogo ------------------------------------------------ */
+/* ---- Rejilla del catálogo ------------------------------------------------
+   Cuatro productos: una columna en móvil y 2 × 2 desde tableta, para que
+   las fotos se vean grandes y no quede una tarjeta suelta.                  */
 .catalogo__rejilla {
   display: grid;
   gap: var(--espacio-6);
-  grid-template-columns: repeat(auto-fill, minmax(17.5rem, 1fr));
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 48rem) {
+  .catalogo__rejilla {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .producto {
@@ -72,42 +36,22 @@
   box-shadow: var(--sombra-media);
 }
 
-/* ---- Figura del producto -------------------------------------------------
-   Sin fotografía: un halo con la paleta de marca y el icono de la familia.
-   Se sustituye por <img> cuando existan las fotos reales del catálogo.     */
+/* ---- Foto del producto --------------------------------------------------- */
 .producto__figura {
-  position: relative;
-  display: grid;
-  place-items: center;
   aspect-ratio: 4 / 3;
-  color: var(--color-primario);
-  background: linear-gradient(150deg, var(--color-fondo-alterno), var(--marca-arena));
+  background-color: var(--marca-coral);
   overflow: hidden;
 }
 
-.producto__halo {
-  position: absolute;
-  width: 62%;
-  aspect-ratio: 1;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.9), rgba(238, 173, 174, 0.55) 62%, transparent 72%);
-  border-radius: 50%;
+.producto__figura img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   transition: transform var(--transicion-lenta);
 }
 
-.producto:hover .producto__halo {
-  transform: scale(1.15);
-}
-
-.producto__figura .icono {
-  position: relative;
-  width: 2.75rem;
-  height: 2.75rem;
-  stroke-width: 1;
-  transition: transform var(--transicion-lenta);
-}
-
-.producto:hover .producto__figura .icono {
-  transform: translateY(-4px) rotate(-6deg);
+.producto:hover .producto__figura img {
+  transform: scale(1.04);
 }
 
 /* ---- Cuerpo -------------------------------------------------------------- */
@@ -166,13 +110,6 @@
   font-size: var(--texto-lg);
   font-weight: 500;
   color: var(--color-primario);
-}
-
-.catalogo__vacio {
-  padding-block: var(--espacio-16);
-  text-align: center;
-  font-size: var(--texto-lg);
-  color: var(--color-tinta-suave);
 }
 
 /* ---- Aviso sanitario ----------------------------------------------------- */

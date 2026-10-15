@@ -205,8 +205,9 @@
     <div class="productos-inicio__rejilla">
       <% productos.forEach(function (producto, indice) { %>
       <article class="tarjeta-producto" data-revelar style="--retardo: <%= indice %>">
-        <div class="tarjeta-producto__figura" aria-hidden="true">
-          <svg class="icono"><use href="#i-hoja"></use></svg>
+        <div class="tarjeta-producto__figura">
+          <img src="<%= producto.imagen %>" alt="<%= producto.nombre %>"
+               width="800" height="600" loading="lazy" decoding="async">
         </div>
         <div class="tarjeta-producto__cuerpo">
           <p class="tarjeta-producto__formato"><%= producto.formato %></p>
@@ -220,7 +221,7 @@
 
     <p class="productos-inicio__pie" data-revelar>
       <a class="enlace-subrayado" href="/productos">
-        Ver el catálogo completo
+        Ver los productos en detalle
         <svg class="icono" aria-hidden="true"><use href="#i-flecha"></use></svg>
       </a>
     </p>

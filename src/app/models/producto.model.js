@@ -4,10 +4,8 @@
  * CATÁLOGO DE PRODUCTOS DE BIENESTAR
  * ==================================
  *
- * Único modelo del proyecto con FUNCIONES además de datos: filtra por
- * categoría y da formato a los precios.
- *
- * Los precios son de referencia para la maqueta del proyecto escolar.
+ * Único modelo del proyecto con FUNCIONES además de datos: da formato a los
+ * precios y elige los destacados de la portada.
  *
  * PENSADO PARA CRECER
  * Cuando exista una base de datos, solo cambia el interior de `listar()` y
@@ -16,132 +14,69 @@
  * enteran del cambio. Eso es lo que da el separar en capas.
  */
 
-// ── BLOQUE 1: Categorías del filtro ─────────────────────────────────────────
-// El id viaja en la URL (?categoria=infusiones) y el nombre es lo que se ve
-// en el botón. 'todos' es un caso especial: no filtra nada.
-const categorias = [
-  { id: 'todos', nombre: 'Todo el catálogo' },
-  { id: 'infusiones', nombre: 'Infusiones' },
-  { id: 'topicos', nombre: 'Cremas y tópicos' },
-  { id: 'confort', nombre: 'Confort' },
-  { id: 'papeleria', nombre: 'Diarios' },
-];
-
-// ── BLOQUE 2: El catálogo ───────────────────────────────────────────────────
+// ── BLOQUE 1: El catálogo ───────────────────────────────────────────────────
 /**
  * Campos de cada producto:
- *   id        → identificador único
- *   categoria → debe coincidir con un id del BLOQUE 1
- *   precio    → número puro en pesos, SIN formato (ver BLOQUE 3)
- *   formato   → presentación ("Caja x 20 bolsitas")
+ *   id        → identificador único; también nombra su foto en
+ *               `public/images/productos/<id>.jpg`
+ *   precio    → número puro en pesos, SIN formato (ver BLOQUE 2)
+ *   formato   → presentación ("Tubo 150 g")
  *   resumen   → frase corta para la tarjeta
  *   detalle   → explicación ampliada
  *   etapas    → ids de `etapa.model.js`; conecta producto con momento de vida
  *   destacado → si aparece en la portada
  *
- * El precio se guarda como NÚMERO y no como texto ("28.000 COP") a propósito:
+ * El precio se guarda como NÚMERO y no como texto ("100.000 COP") a propósito:
  * así se puede ordenar, sumar o comparar. El formato se aplica al mostrarlo.
  */
 const productos = [
   {
-    id: 'te-ciclo-suave',
-    nombre: 'Té Ciclo Suave',
-    categoria: 'infusiones',
-    precio: 28000,
-    formato: 'Caja x 20 bolsitas',
-    resumen: 'Mezcla de manzanilla, jengibre y canela para los días de cólico.',
+    id: 'kit-menstrual-basico',
+    nombre: 'Kit Menstrual Básico',
+    precio: 102000,
+    formato: 'Neceser + compresa de gel',
+    resumen: 'Todo lo esencial para ti.',
     detalle:
-      'Infusión pensada para los primeros días del ciclo. Ingredientes de origen natural, sin azúcares añadidos.',
+      'Diseñado para acompañarte durante tu ciclo menstrual con practicidad, comodidad y cariño. Reúne elementos esenciales para que te sientas preparada y tranquila durante tu periodo, recordándote que cuidar de ti también significa escuchar tu cuerpo y atender tus necesidades.',
     etapas: ['menstruacion'],
     destacado: true,
   },
   {
-    id: 'te-noche-serena',
-    nombre: 'Té Noche Serena',
-    categoria: 'infusiones',
-    precio: 30000,
-    formato: 'Caja x 20 bolsitas',
-    resumen: 'Toronjil y lavanda para las noches en que el descanso no llega.',
+    id: 'gel-termico',
+    nombre: 'Gel Térmico',
+    precio: 103000,
+    formato: 'Tubo 150 g',
+    resumen: 'Alivio y calidez.',
     detalle:
-      'Formulada para acompañar el descanso durante los cambios hormonales de la menopausia.',
-    etapas: ['menopausia'],
-    destacado: false,
-  },
-  {
-    id: 'crema-calor-tibio',
-    nombre: 'Crema Calor Tibio',
-    categoria: 'topicos',
-    precio: 42000,
-    formato: 'Frasco 120 ml',
-    resumen: 'Crema de efecto calor para masaje abdominal y lumbar.',
-    detalle:
-      'Textura ligera de rápida absorción con aceites esenciales. Uso externo, no apta sobre piel lesionada.',
-    etapas: ['menstruacion', 'procesos-medicos'],
+      'Un pequeño aliado para esos días en los que tu cuerpo necesita un poco más de cuidado. Brinda una sensación reconfortante de calor en la zona abdominal, te acompaña durante los cólicos menstruales y convierte el descanso en un momento de bienestar.',
+    etapas: ['menstruacion'],
     destacado: true,
   },
   {
-    id: 'crema-piel-nueva',
-    nombre: 'Crema Piel Nueva',
-    categoria: 'topicos',
-    precio: 48000,
-    formato: 'Frasco 200 ml',
-    resumen: 'Hidratación intensiva para la piel durante el embarazo.',
+    id: 'faja-termica-menstrual',
+    nombre: 'Faja Térmica Menstrual',
+    precio: 107000,
+    formato: 'Faja eléctrica con control de calor',
+    resumen: 'Comodidad que te acompaña.',
     detalle:
-      'Manteca de karité y aceite de almendras para zonas de mayor tensión de la piel. Sin fragancias fuertes.',
-    etapas: ['embarazo'],
-    destacado: false,
-  },
-  {
-    id: 'compresa-termica',
-    nombre: 'Compresa térmica reutilizable',
-    categoria: 'confort',
-    precio: 55000,
-    formato: 'Unidad · funda lavable',
-    resumen: 'Calor local sostenido, sin cables y sin pilas.',
-    detalle:
-      'Relleno de semillas naturales. Se calienta en microondas y conserva la temperatura cerca de 25 minutos.',
-    etapas: ['menstruacion', 'procesos-medicos'],
+      'Una aliada pensada para brindarte comodidad y una agradable sensación de calor en la zona abdominal durante los días del periodo. Su diseño permite llevar el calor cerca de ti mientras descansas o realizas actividades cotidianas, sin dejar de lado tu rutina.',
+    etapas: ['menstruacion'],
     destacado: true,
   },
   {
-    id: 'kit-primer-ciclo',
-    nombre: 'Kit Primer Ciclo',
-    categoria: 'confort',
-    precio: 89000,
-    formato: 'Kit x 5 piezas',
-    resumen: 'El acompañamiento que muchas hubiéramos querido a los doce años.',
+    id: 'te-rojo',
+    nombre: 'Té Rojo',
+    precio: 100000,
+    formato: 'Caja · infusión de bienestar',
+    resumen: 'Una pausa para reconectar contigo.',
     detalle:
-      'Guía educativa ilustrada, diario juvenil, compresa térmica pequeña, té suave y neceser para el colegio.',
-    etapas: ['pubertad'],
+      'Una taza de calidez para regalarte unos minutos de tranquilidad en medio de tus días. Te invita a crear pequeños rituales de autocuidado, disfrutando de su aroma y sabor mientras haces una pausa para respirar, relajarte y reconectar contigo misma.',
+    etapas: [],
     destacado: true,
-  },
-  {
-    id: 'diario-adolescente',
-    nombre: 'Diario Áurea Joven',
-    categoria: 'papeleria',
-    precio: 38000,
-    formato: '120 páginas · tapa dura',
-    resumen: 'Un diario guiado para entender lo que el cuerpo empieza a decir.',
-    detalle:
-      'Secciones para registrar el ciclo, el ánimo y preguntas frecuentes respondidas con lenguaje claro.',
-    etapas: ['pubertad'],
-    destacado: false,
-  },
-  {
-    id: 'diario-adulta',
-    nombre: 'Diario Áurea Ciclo',
-    categoria: 'papeleria',
-    precio: 45000,
-    formato: '160 páginas · tapa dura',
-    resumen: 'Registro mensual del ciclo, síntomas y energía.',
-    detalle:
-      'Doce meses de seguimiento con espacio para anotar consultas médicas y observaciones personales.',
-    etapas: ['menstruacion', 'embarazo', 'menopausia'],
-    destacado: false,
   },
 ];
 
-// ── BLOQUE 3: Formato de moneda ─────────────────────────────────────────────
+// ── BLOQUE 2: Formato de moneda ─────────────────────────────────────────────
 /**
  * `Intl.NumberFormat` es la herramienta nativa de JavaScript para dar formato
  * a números según el país. Con 'es-CO' y 'COP' convierte 28000 en "$ 28.000":
@@ -159,10 +94,10 @@ const formatoPesos = new Intl.NumberFormat('es-CO', {
   maximumFractionDigits: 0,
 });
 
-// ── BLOQUE 4: Consultas al catálogo ─────────────────────────────────────────
+// ── BLOQUE 3: Consultas al catálogo ─────────────────────────────────────────
 /**
- * Devuelve los productos, opcionalmente filtrados, con el precio ya listo
- * para mostrar.
+ * Devuelve los productos con el precio ya listo para mostrar y la ruta de
+ * su foto.
  *
  * El formateo ocurre AQUÍ y no en la plantilla porque las vistas deben
  * limitarse a colocar datos, no a transformarlos. Así, si mañana hay que
@@ -172,18 +107,13 @@ const formatoPesos = new Intl.NumberFormat('es-CO', {
  * Se devuelve una copia de cada producto (`...producto`) con el campo nuevo,
  * en vez de modificar el original: el array `productos` queda intacto.
  *
- * @param {string} [categoria] Id de categoría; 'todos' o vacío devuelve todo.
- * @returns {Array} Productos con `precioFormateado` añadido.
+ * @returns {Array} Productos con `precioFormateado` e `imagen` añadidos.
  */
-function listar(categoria) {
-  const filtrados =
-    !categoria || categoria === 'todos'
-      ? productos // Sin filtro: el catálogo completo.
-      : productos.filter((producto) => producto.categoria === categoria);
-
-  return filtrados.map((producto) => ({
+function listar() {
+  return productos.map((producto) => ({
     ...producto, // Copia de todos los campos originales
-    precioFormateado: formatoPesos.format(producto.precio), // + el nuevo
+    precioFormateado: formatoPesos.format(producto.precio),
+    imagen: `/images/productos/${producto.id}.jpg`,
   }));
 }
 
@@ -199,4 +129,4 @@ function destacados(limite = 3) {
   return listar().filter((producto) => producto.destacado).slice(0, limite);
 }
 
-module.exports = { productos, categorias, listar, destacados };
+module.exports = { productos, listar, destacados };

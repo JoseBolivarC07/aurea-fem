@@ -54,7 +54,7 @@ function mostrar(req, res) {
     // resumen, el listado completo vive en /servicios.
     servicios: servicios.filter((servicio) => servicio.destacado),
     etapas, //    Las 5 etapas de vida
-    productos: destacados(3), // Los 3 primeros productos destacados
+    productos: destacados(4), // Los 4 primeros productos destacados
   });
 }
 
