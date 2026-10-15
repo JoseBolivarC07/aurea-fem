@@ -1,0 +1,143 @@
+<%#
+  ══════════════════════════════════════════════════════════════════════════
+  VISTA: SERVICIOS
+  ══════════════════════════════════════════════════════════════════════════
+
+  Cuatro secciones:
+    1. Encabezado   → titular y "elemento innovador" de la empresa
+    2. Servicios    → los 6 servicios, con ancla propia cada uno
+    3. Comparativa  → qué hace el sector / qué hacemos nosotras
+    4. Etapas       → panel con pestañas, una por etapa de vida
+    5. Llamado      → invitación a probar el chat
+
+  El panel de pestañas lo controla `/js/views/servicios.js`. Sin JavaScript
+  se ve la primera etapa y el resto queda oculto: se pierde el cambio de
+  pestaña, no el contenido principal.
+
+  Cada servicio recibe como atributo `id` el campo `id` de su modelo, lo que
+  permite enlazarlo directamente desde otra página (/servicios#chat-ia).
+
+  Estilos exclusivos: `/css/views/servicios.css`
+%>
+<%- include('partials/encabezado-pagina', {
+      paginaEtiqueta: 'Servicios',
+      paginaTitulo: 'Una sola plataforma para todo lo que buscabas por separado',
+      paginaTexto: identity.innovation
+    }) %>
+
+
+<section class="servicios-detalle">
+  <div class="contenedor">
+    <% servicios.forEach(function (servicio, indice) { %>
+    <article class="servicio" id="<%= servicio.id %>" data-revelar>
+      <div class="servicio__indice" aria-hidden="true"><%= String(indice + 1).padStart(2, '0') %></div>
+      <div class="servicio__marca" aria-hidden="true">
+        <svg class="icono"><use href="#i-<%= servicio.icono %>"></use></svg>
+      </div>
+      <div class="servicio__cuerpo">
+        <h2 class="servicio__titulo"><%= servicio.nombre %></h2>
+        <p class="servicio__resumen"><%= servicio.resumen %></p>
+        <p class="servicio__detalle"><%= servicio.detalle %></p>
+      </div>
+    </article>
+    <% }); %>
+  </div>
+</section>
+
+
+<section class="comparativa seccion-alterna">
+  <div class="contenedor">
+    <header class="encabezado-seccion">
+      <p class="etiqueta-seccion" data-revelar>Qué hacemos diferente</p>
+      <h2 class="titulo-seccion" data-revelar style="--retardo: 1">
+        La diferencia está en la integración
+      </h2>
+    </header>
+
+    <div class="comparativa__tabla" role="table" aria-label="Comparación con otras propuestas del sector">
+      <div class="comparativa__fila comparativa__fila--encabezado" role="row">
+        <span role="columnheader">El resto del sector</span>
+        <span role="columnheader">Áurea Fem</span>
+      </div>
+
+      <% diferenciadores.forEach(function (item, indice) { %>
+      <div class="comparativa__fila" role="row" data-revelar style="--retardo: <%= indice %>">
+        <span class="comparativa__otros" role="cell"><%= item.otros %></span>
+        <span class="comparativa__nosotras" role="cell">
+          <svg class="icono" aria-hidden="true"><use href="#i-check"></use></svg>
+          <%= item.nosotras %>
+        </span>
+      </div>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+
+<section class="etapas-detalle">
+  <div class="contenedor">
+    <header class="encabezado-seccion">
+      <p class="etiqueta-seccion" data-revelar>Etapas</p>
+      <h2 class="titulo-seccion" data-revelar style="--retardo: 1">
+        Acompañamiento por momento de vida
+      </h2>
+    </header>
+
+    <div class="etapas-detalle__panel">
+      <nav class="etapas-detalle__pestanas" aria-label="Etapas acompañadas" data-pestanas>
+        <% etapas.forEach(function (etapa, indice) { %>
+        <button class="pestana<%= indice === 0 ? ' es-activa' : '' %>"
+                type="button" role="tab"
+                id="pestana-<%= etapa.id %>"
+                aria-controls="panel-<%= etapa.id %>"
+                aria-selected="<%= indice === 0 %>"
+                data-pestana="<%= etapa.id %>">
+          <span class="pestana__orden"><%= etapa.orden %></span>
+          <span class="pestana__nombre"><%= etapa.nombre %></span>
+        </button>
+        <% }); %>
+      </nav>
+
+      <div class="etapas-detalle__contenidos">
+        <% etapas.forEach(function (etapa, indice) { %>
+        <article class="panel-etapa<%= indice === 0 ? ' es-activo' : '' %>"
+                 id="panel-<%= etapa.id %>"
+                 role="tabpanel"
+                 aria-labelledby="pestana-<%= etapa.id %>"
+                 data-panel="<%= etapa.id %>"
+                 <%= indice === 0 ? '' : 'hidden' %>>
+          <h3 class="panel-etapa__titulo"><%= etapa.nombre %></h3>
+          <p class="panel-etapa__resumen"><%= etapa.resumen %></p>
+          <p class="panel-etapa__texto"><%= etapa.descripcion %></p>
+          <ul class="panel-etapa__lista">
+            <% etapa.acompanamiento.forEach(function (punto) { %>
+            <li>
+              <svg class="icono" aria-hidden="true"><use href="#i-check"></use></svg>
+              <%= punto %>
+            </li>
+            <% }); %>
+          </ul>
+        </article>
+        <% }); %>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="llamado">
+  <div class="contenedor llamado__interior" data-revelar>
+    <p class="etiqueta-seccion etiqueta-seccion--clara">Pruébalo ahora</p>
+    <h2 class="llamado__titulo">Aura ya está lista para responderte</h2>
+    <p class="llamado__texto">
+      Nuestra orientadora con inteligencia artificial conoce la plataforma, el
+      catálogo y cada etapa. Pregúntale lo que quieras saber.
+    </p>
+    <div class="llamado__acciones">
+      <button class="boton boton--claro" type="button" data-abrir-chat>
+        <svg class="icono" aria-hidden="true"><use href="#i-chat"></use></svg>
+        Abrir el chat
+      </button>
+    </div>
+  </div>
+</section>

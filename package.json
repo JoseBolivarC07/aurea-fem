@@ -1,0 +1,23 @@
+{
+  "name": "aurea-fem",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Landing page corporativa de Áurea Fem — acompañamiento integral en salud y bienestar femenino.",
+  "author": "Áurea Fem",
+  "license": "UNLICENSED",
+  "type": "commonjs",
+  "main": "app.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js",
+    "build:static": "node scripts/build-static.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2"
+  }
+}

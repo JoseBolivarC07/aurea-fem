@@ -1,0 +1,18 @@
+<section class="pagina-error">
+  <div class="contenedor pagina-error__interior">
+    <p class="pagina-error__codigo">500</p>
+    <h1 class="pagina-error__titulo">Algo falló de nuestro lado</h1>
+    <p class="pagina-error__texto">
+      El servidor no pudo completar la solicitud. Vuelve a intentarlo en un
+      momento; si el problema sigue, escríbenos.
+    </p>
+
+    <% if (typeof detail !== 'undefined' && detail) { %>
+    <pre class="pagina-error__detalle"><%= detail %></pre>
+    <% } %>
+
+    <div class="pagina-error__acciones">
+      <a class="boton boton--primario" href="/">Volver al inicio</a>
+    </div>
+  </div>
+</section>

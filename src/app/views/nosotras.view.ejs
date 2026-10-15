@@ -1,0 +1,134 @@
+<%#
+  ══════════════════════════════════════════════════════════════════════════
+  VISTA: NOSOTRAS
+  ══════════════════════════════════════════════════════════════════════════
+
+  Página institucional, en cinco secciones:
+    1. Encabezado     → titular y presentación
+    2. Declaraciones  → misión, visión y propósito superior
+    3. Valores        → los 5 valores corporativos
+    4. Objetivos      → los 5 objetivos estratégicos
+    5. Equipo         → las 5 integrantes fundadoras
+
+  El `include` de abajo reutiliza el encabezado común de las páginas
+  interiores, pasándole sus textos como parámetros. Es la misma idea de una
+  función: un molde con huecos que cada página rellena a su manera.
+
+  Estilos exclusivos: `/css/views/nosotras.css`
+#%>
+<%- include('partials/encabezado-pagina', {
+      paginaEtiqueta: 'Nosotras',
+      paginaTitulo: 'Una empresa hecha por mujeres, para mujeres',
+      paginaTexto: 'Áurea Fem nació como proyecto empresarial en la Institución Educativa Yermo y Parres, en Medellín. La palabra «áurea» significa valiosa; «fem» habla de lo femenino. El nombre resume la idea completa.'
+    }) %>
+
+
+<section class="declaraciones">
+  <div class="contenedor declaraciones__rejilla">
+
+    <article class="declaracion declaracion--principal" data-revelar>
+      <h2 class="declaracion__titulo">Misión</h2>
+      <p class="declaracion__texto"><%= identity.mission %></p>
+    </article>
+
+    <article class="declaracion" data-revelar style="--retardo: 1">
+      <h2 class="declaracion__titulo">Visión</h2>
+      <p class="declaracion__texto"><%= identity.vision %></p>
+    </article>
+
+    <article class="declaracion declaracion--acento" data-revelar style="--retardo: 2">
+      <h2 class="declaracion__titulo">Propósito superior</h2>
+      <p class="declaracion__texto"><%= identity.purpose %></p>
+    </article>
+
+  </div>
+</section>
+
+
+<section class="valores seccion-alterna">
+  <div class="contenedor">
+    <header class="encabezado-seccion">
+      <p class="etiqueta-seccion" data-revelar>Valores corporativos</p>
+      <h2 class="titulo-seccion" data-revelar style="--retardo: 1">
+        Cinco principios que guían cada decisión
+      </h2>
+    </header>
+
+    <dl class="valores__lista">
+      <% valores.forEach(function (valor, indice) { %>
+      <div class="valor" data-revelar style="--retardo: <%= indice %>">
+        <dt class="valor__nombre">
+          <span class="valor__marca" aria-hidden="true"></span>
+          <%= valor.nombre %>
+        </dt>
+        <dd class="valor__texto"><%= valor.texto %></dd>
+      </div>
+      <% }); %>
+    </dl>
+  </div>
+</section>
+
+
+<section class="objetivos">
+  <div class="contenedor objetivos__interior">
+    <header class="encabezado-seccion">
+      <p class="etiqueta-seccion" data-revelar>Objetivos estratégicos</p>
+      <h2 class="titulo-seccion" data-revelar style="--retardo: 1">
+        Hacia dónde vamos
+      </h2>
+    </header>
+
+    <ol class="objetivos__lista">
+      <% objetivos.forEach(function (objetivo, indice) { %>
+      <li class="objetivo" data-revelar style="--retardo: <%= indice %>">
+        <span class="objetivo__numero"><%= String(indice + 1).padStart(2, '0') %></span>
+        <p class="objetivo__texto"><%= objetivo %></p>
+      </li>
+      <% }); %>
+    </ol>
+  </div>
+</section>
+
+
+<section class="equipo seccion-alterna">
+  <div class="contenedor">
+    <header class="encabezado-seccion encabezado-seccion--dividido">
+      <div>
+        <p class="etiqueta-seccion" data-revelar>El equipo</p>
+        <h2 class="titulo-seccion" data-revelar style="--retardo: 1">
+          Quiénes están detrás
+        </h2>
+      </div>
+      <p class="encabezado-seccion__apoyo" data-revelar style="--retardo: 2">
+        Cinco áreas, cinco responsables. Los cargos se asignaron según las
+        habilidades reales de cada integrante del equipo fundador.
+      </p>
+    </header>
+
+    <div class="equipo__rejilla">
+      <% equipo.forEach(function (persona, indice) { %>
+      <article class="integrante" data-revelar style="--retardo: <%= indice %>">
+        <span class="integrante__avatar" aria-hidden="true"><%= persona.iniciales %></span>
+        <h3 class="integrante__nombre"><%= persona.nombre %></h3>
+        <p class="integrante__cargo"><%= persona.cargo %></p>
+        <p class="integrante__area"><%= persona.area %></p>
+        <p class="integrante__texto"><%= persona.descripcion %></p>
+      </article>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+
+<section class="llamado llamado--sobrio">
+  <div class="contenedor llamado__interior" data-revelar>
+    <h2 class="llamado__titulo">¿Quieres saber más del proyecto?</h2>
+    <p class="llamado__texto">
+      Escríbenos y te contamos cómo funciona la plataforma, cómo seleccionamos
+      los productos o cómo trabajar con nosotras.
+    </p>
+    <div class="llamado__acciones">
+      <a class="boton boton--claro" href="/contacto">Hablar con el equipo</a>
+    </div>
+  </div>
+</section>

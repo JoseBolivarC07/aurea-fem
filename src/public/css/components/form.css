@@ -1,0 +1,117 @@
+/* ==========================================================================
+   Componente: Formularios
+   Compartido por la página de contacto y la de acceso interno.
+   ========================================================================== */
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-5);
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+}
+
+.campo__etiqueta {
+  font-size: var(--texto-sm);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--color-primario-oscuro);
+}
+
+.campo__opcional {
+  font-weight: 400;
+  color: var(--color-tinta-suave);
+}
+
+.campo__control {
+  width: 100%;
+  padding: 0.9rem var(--espacio-4);
+  font-size: var(--texto-md);
+  color: var(--color-tinta);
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-md);
+  transition:
+    border-color var(--transicion),
+    box-shadow var(--transicion),
+    background-color var(--transicion);
+}
+
+.campo__control::placeholder {
+  color: var(--color-tinta-suave);
+}
+
+.campo__control:hover {
+  border-color: var(--color-borde-fuerte);
+}
+
+.campo__control:focus {
+  outline: none;
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 3px rgba(145, 13, 43, 0.12);
+}
+
+.campo__control--area {
+  min-height: 9rem;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+/* Selector nativo con flecha propia. */
+.campo__selector {
+  position: relative;
+}
+
+.campo__selector select {
+  appearance: none;
+  padding-right: var(--espacio-10);
+  cursor: pointer;
+}
+
+.campo__selector::after {
+  content: '';
+  position: absolute;
+  right: var(--espacio-5);
+  top: 50%;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 1.5px solid var(--color-primario);
+  border-bottom: 1.5px solid var(--color-primario);
+  translate: 0 -70%;
+  rotate: 45deg;
+  pointer-events: none;
+}
+
+.campo__ayuda {
+  font-size: var(--texto-xs);
+  color: var(--color-tinta-suave);
+  text-align: right;
+}
+
+.campo__error {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  font-size: var(--texto-sm);
+  color: var(--color-error);
+  animation: aparecer-suave 300ms var(--curva-salida) both;
+}
+
+.campo.tiene-error .campo__control {
+  border-color: var(--color-error);
+  background-color: rgba(160, 21, 48, 0.03);
+}
+
+.campo.tiene-error .campo__control:focus {
+  box-shadow: 0 0 0 3px rgba(160, 21, 48, 0.14);
+}
+
+.formulario__nota {
+  font-size: var(--texto-xs);
+  line-height: 1.55;
+  color: var(--color-tinta-suave);
+}

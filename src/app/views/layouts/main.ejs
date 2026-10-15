@@ -1,0 +1,139 @@
+<%#
+  ══════════════════════════════════════════════════════════════════════════
+  PLANTILLA PRINCIPAL (LAYOUT)
+  ══════════════════════════════════════════════════════════════════════════
+
+  El "marco" de todas las páginas del sitio. Contiene lo que se repite —
+  <head>, cabecera, pie, chat — para que las vistas solo tengan que escribir
+  su contenido propio.
+
+  CÓMO LLEGA AQUÍ EL CONTENIDO
+  El middleware `src/middlewares/layout.js` renderiza primero la vista
+  concreta (por ejemplo `home.view.ejs`) a texto HTML, y ese texto entra aquí
+  en la variable `body`. Es el renderizado en dos pasos.
+
+  SINTAXIS DE EJS QUE SE USA EN ESTE ARCHIVO
+  Todas las etiquetas abren con "menor-que + porcentaje" y cierran con
+  "porcentaje + mayor-que". Lo que cambia es el carácter que va justo tras
+  la apertura:
+
+    (nada)  → ejecuta JavaScript sin imprimir nada (bucles, condicionales)
+    igual   → imprime ESCAPANDO el HTML  ·  seguro para cualquier texto
+    guion   → imprime SIN escapar        ·  solo para HTML de confianza
+    almohadilla → comentario: no llega al HTML final (como este bloque)
+
+  La diferencia entre las dos formas de imprimir es de SEGURIDAD: si un texto
+  contuviera la etiqueta de un script, la versión que escapa lo mostraría
+  como letras y la que no escapa lo ejecutaría. Por eso la forma sin escapar
+  se usa aquí únicamente con `body` y con los parciales, que son HTML
+  generado por nosotras, nunca datos escritos por una usuaria.
+
+  (Las etiquetas se describen con palabras y no con sus símbolos porque EJS
+  no permite escribir ninguno de sus delimitadores dentro de un comentario:
+  cortaría el bloque antes de tiempo. Abajo se ven todas en uso real.)
+%>
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+  <%# ── Configuración básica del documento ────────────────────────────── %>
+  <meta charset="UTF-8">
+  <%# `viewport` es lo que hace que el sitio se adapte al móvil. Sin esta
+      línea, el celular mostraría la versión de escritorio encogida. %>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <%# Tiñe la barra del navegador en Android con el rojo de la marca. %>
+  <meta name="theme-color" content="#910D2B">
+
+  <%# ── Metadatos de la página ────────────────────────────────────────────
+      Los aporta cada controlador. Si alguno no los define, `locals.js` deja
+      un valor por defecto para que nunca queden vacíos. %>
+  <title><%= title %></title>
+  <meta name="description" content="<%= description %>">
+  <meta name="author" content="<%= brand.name %>">
+
+  <%# ── Open Graph ────────────────────────────────────────────────────────
+      Controla cómo se ve el enlace al compartirlo en WhatsApp, Instagram o
+      Facebook: título, descripción y nombre del sitio en la tarjeta previa.
+      Sin esto, las redes improvisan con lo que encuentren. %>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="<%= brand.name %>">
+  <meta property="og:title" content="<%= title %>">
+  <meta property="og:description" content="<%= description %>">
+  <meta property="og:locale" content="es_CO">
+
+  <%# ── Iconos de la pestaña ──────────────────────────────────────────── %>
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/images/favicon.svg">
+
+  <%# ── Tipografías ───────────────────────────────────────────────────────
+      `preconnect` abre la conexión con Google Fonts antes de necesitarla, lo
+      que ahorra unos milisegundos al cargar.
+
+      Montserrat es la fuente corporativa; Cormorant Garamond es la serif de
+      los titulares, que recoge el registro del logotipo.
+
+      `display=swap` muestra el texto con una fuente del sistema mientras
+      llegan las definitivas, en lugar de dejar la página en blanco. %>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap">
+
+  <%# ── Hojas de estilo ───────────────────────────────────────────────────
+      Aquí se materializa el requisito de "una hoja por vista".
+
+      El array `styles` lo arma `layout.js`: primero la base compartida
+      (reset, tokens, tipografía, cabecera, pie, chat) y después lo que
+      declaró el controlador de ESTA página.
+
+      El orden importa: en CSS, lo último declarado gana. %>
+  <% styles.forEach(function (hoja) { %>
+  <link rel="stylesheet" href="<%= hoja %>">
+  <% }); %>
+
+  <%# ── Script anti-parpadeo ──────────────────────────────────────────────
+      Único script bloqueante del sitio, y a propósito.
+
+      Marca el <html> como "con JavaScript" antes del primer pintado. Si esto
+      se cargara diferido, el contenido aparecería visible y acto seguido se
+      ocultaría para animarse: un parpadeo feo. Ver `no-fouc.js`. %>
+  <script src="/js/core/no-fouc.js"></script>
+</head>
+
+<body class="<%= bodyClass %>">
+  <%# Primer elemento del <body>: enlace para saltar directamente al
+      contenido. Está oculto hasta que recibe el foco con Tab. Le ahorra a
+      quien navega con teclado tener que recorrer todo el menú en cada
+      página. %>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <%# Sprite de iconos: un bloque SVG oculto con todos los símbolos. Se
+      carga una sola vez y las vistas los reutilizan con <use>. %>
+  <%- include('../partials/icons') %>
+
+  <%# Cabecera con logotipo, menú y botón de contacto. %>
+  <%- include('../partials/header') %>
+
+  <main id="contenido">
+    <%# AQUÍ entra la vista concreta, ya renderizada por `layout.js`.
+        Se imprime con la etiqueta que NO escapa, porque `body` ya es HTML
+        y escaparlo mostraría las etiquetas como texto en pantalla. %>
+    <%- body %>
+  </main>
+
+  <%- include('../partials/footer') %>
+
+  <%# El chat solo aparece donde tiene sentido. Las páginas de acceso y de
+      error lo desactivan pasando `showChat: false` desde su controlador. %>
+  <% if (showChat) { %><%- include('../partials/chat-widget') %><% } %>
+
+  <%# ── Scripts ───────────────────────────────────────────────────────────
+      Mismo mecanismo que las hojas de estilo: base + lo propio de la vista.
+
+      `type="module"` permite usar import/export y, de paso, difiere la
+      ejecución hasta que el HTML esté completo: por eso van al final y no
+      hace falta esperar a ningún evento de carga. %>
+  <% scripts.forEach(function (script) { %>
+  <script src="<%= script %>" type="module"></script>
+  <% }); %>
+</body>
+</html>

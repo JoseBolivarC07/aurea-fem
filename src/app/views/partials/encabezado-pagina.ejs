@@ -1,0 +1,11 @@
+<%#
+  Encabezado común de las páginas interiores.
+  Espera en `locals`: paginaEtiqueta, paginaTitulo, paginaTexto.
+%>
+<section class="encabezado-pagina">
+  <div class="contenedor encabezado-pagina__interior">
+    <p class="etiqueta-seccion" data-revelar><%= paginaEtiqueta %></p>
+    <h1 class="encabezado-pagina__titulo" data-revelar style="--retardo: 1"><%= paginaTitulo %></h1>
+    <p class="encabezado-pagina__texto" data-revelar style="--retardo: 2"><%= paginaTexto %></p>
+  </div>
+</section>

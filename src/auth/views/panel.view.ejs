@@ -1,0 +1,41 @@
+<section class="panel">
+  <div class="contenedor">
+
+    <header class="panel__cabecera">
+      <div>
+        <p class="etiqueta-seccion">Panel interno</p>
+        <h1 class="panel__titulo">Mensajes recibidos</h1>
+        <p class="panel__texto">
+          Sesión iniciada como <strong><%= sesion.usuario %></strong> · <%= sesion.rol %>
+        </p>
+      </div>
+
+      <form method="post" action="/acceso/salir">
+        <button class="boton boton--contorno boton--compacto" type="submit">Cerrar sesión</button>
+      </form>
+    </header>
+
+    <% if (mensajes.length === 0) { %>
+    <p class="panel__vacio">Todavía no hay mensajes del formulario de contacto.</p>
+    <% } else { %>
+    <ul class="panel__mensajes">
+      <% mensajes.forEach(function (mensaje) { %>
+      <li class="mensaje">
+        <div class="mensaje__meta">
+          <span class="mensaje__nombre"><%= mensaje.nombre %></span>
+          <a class="mensaje__correo" href="mailto:<%= mensaje.correo %>"><%= mensaje.correo %></a>
+          <time class="mensaje__fecha" datetime="<%= mensaje.fecha %>">
+            <%= new Date(mensaje.fecha).toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' }) %>
+          </time>
+          <% if (mensaje.etapa) { %>
+          <span class="marca-etapa"><%= mensaje.etapa %></span>
+          <% } %>
+        </div>
+        <p class="mensaje__texto"><%= mensaje.mensaje %></p>
+      </li>
+      <% }); %>
+    </ul>
+    <% } %>
+
+  </div>
+</section>

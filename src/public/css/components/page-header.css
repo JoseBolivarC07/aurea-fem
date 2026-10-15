@@ -1,0 +1,52 @@
+/* ==========================================================================
+   Componente: Encabezado de página interior
+   Lo cargan solo las vistas que lo usan (nosotras, servicios, productos,
+   contacto). No entra en la base porque la portada no lo necesita.
+   ========================================================================== */
+
+.encabezado-pagina {
+  position: relative;
+  padding-block: clamp(8rem, 12vw, 11rem) clamp(3rem, 5vw, 4.5rem) !important;
+  overflow: hidden;
+  background:
+    radial-gradient(58% 90% at 12% 0%, rgba(238, 173, 174, 0.3), transparent 70%),
+    radial-gradient(48% 80% at 92% 10%, rgba(226, 213, 202, 0.55), transparent 72%),
+    var(--color-fondo);
+}
+
+/* Desvanecido inferior: el encabezado se funde con la sección siguiente. */
+.encabezado-pagina::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 5rem;
+  background: linear-gradient(to top, var(--color-fondo), transparent);
+  pointer-events: none;
+}
+
+.encabezado-pagina__interior {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-5);
+  max-width: 56rem;
+}
+
+.encabezado-pagina__titulo {
+  font-family: var(--fuente-display);
+  font-size: var(--display-lg);
+  font-weight: 300;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: var(--color-primario-oscuro);
+  max-width: 18ch;
+}
+
+.encabezado-pagina__texto {
+  max-width: 56ch;
+  font-size: var(--texto-lg);
+  line-height: 1.7;
+  color: var(--color-tinta-media);
+}

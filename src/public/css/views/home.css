@@ -1,0 +1,508 @@
+/* ==========================================================================
+   VISTA: INICIO
+   ==========================================================================
+
+   Hoja EXCLUSIVA de la portada. La declara `home.controller.js` y no la
+   carga ninguna otra página del sitio.
+
+   Es la mitad práctica del requisito "cada vista con su CSS independiente":
+   nada de lo que hay aquí puede afectar a otra página, y si mañana se
+   rediseña la portada entera, basta con reescribir este archivo.
+
+   SECCIONES, EN EL MISMO ORDEN QUE EN `home.view.ejs`
+     .portada          → pantalla completa con los anillos de fondo
+     .propuesta        → la frase grande en serif
+     .pilares          → 4 tarjetas
+     .etapas-inicio    → lista de 5 filas
+     .servicios-inicio → 4 tarjetas
+     .productos-inicio → 3 tarjetas de producto
+   ========================================================================== */
+
+/* ---- Portada ------------------------------------------------------------ */
+.portada {
+  position: relative;
+  display: grid;
+  place-items: center; /* Centra el contenido en los dos ejes */
+
+  /* `svh` = "small viewport height": la altura de la pantalla SIN contar la
+     barra del navegador móvil. Con `vh` a secas, en el celular la portada
+     quedaría más alta que la pantalla y el contenido se cortaría al bajar
+     la barra de direcciones. */
+  min-height: 100svh;
+
+  /* El `!important` sobrescribe el `padding-block` que `base/layout.css`
+     aplica a todas las secciones. Aquí hace falta más espacio arriba porque
+     la cabecera es fija y se superpondría al contenido. */
+  padding-block: 9rem 6rem !important;
+
+  /* Recorta los anillos que sobresalen de la sección. */
+  overflow: hidden;
+
+  /* Dos manchas de color superpuestas al fondo base: una rosada arriba al
+     centro y otra arena abajo a la derecha. Los degradados radiales con
+     `transparent` al final se desvanecen sin dejar borde visible, que es lo
+     que da la sensación de luz y no de "mancha pegada". */
+  background:
+    radial-gradient(60% 55% at 50% 8%, rgba(238, 173, 174, 0.34), transparent 70%),
+    radial-gradient(46% 42% at 82% 78%, rgba(226, 213, 202, 0.6), transparent 70%),
+    var(--color-fondo);
+}
+
+.portada__interior {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espacio-6);
+  text-align: center;
+}
+
+/* Anillos concéntricos: el "aura" del nombre de la marca. */
+.portada__aura {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* `inset: 0` + `margin: auto` centra un elemento absoluto de tamaño definido.
+   Se prefiere a `place-items` del contenedor porque deja libres tanto
+   `translate` (que usa el paralaje de home.js) como `transform` (la
+   animación de flotación): ambas propiedades se componen sin pisarse. */
+.portada__anillo {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  border-radius: 50%;
+  border: 1px solid rgba(145, 13, 43, 0.14);
+  animation: flotar 14s ease-in-out infinite;
+}
+
+.portada__anillo--1 {
+  width: min(30rem, 74vw);
+  aspect-ratio: 1;
+  border-color: rgba(145, 13, 43, 0.16);
+}
+
+.portada__anillo--2 {
+  width: min(44rem, 104vw);
+  aspect-ratio: 1;
+  border-color: rgba(145, 13, 43, 0.1);
+  animation-duration: 18s;
+  animation-delay: -3s;
+}
+
+.portada__anillo--3 {
+  width: min(58rem, 136vw);
+  aspect-ratio: 1;
+  border-color: rgba(145, 13, 43, 0.06);
+  animation-duration: 22s;
+  animation-delay: -7s;
+}
+
+.portada__antetitulo {
+  font-size: var(--texto-xs);
+  font-weight: 500;
+  letter-spacing: var(--interletra-amplia);
+  text-transform: uppercase;
+  color: var(--color-acento);
+}
+
+/* ---- Título de la portada ------------------------------------------------
+   Cada línea se anima por separado para que el eslogan se arme por partes.  */
+.portada__titulo {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--fuente-display);
+  font-size: var(--display-xl);
+  font-weight: 300;
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+  color: var(--color-primario-oscuro);
+}
+
+.portada__linea--enfasis {
+  font-style: italic;
+  color: var(--color-primario);
+}
+
+.portada__entrada {
+  max-width: 52ch;
+  font-size: var(--texto-lg);
+  line-height: 1.7;
+  color: var(--color-tinta-media);
+}
+
+.portada__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--espacio-3);
+  margin-top: var(--espacio-2);
+}
+
+.portada__notas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--espacio-3) var(--espacio-8);
+  margin-top: var(--espacio-6);
+  font-size: var(--texto-sm);
+  color: var(--color-tinta-suave);
+}
+
+.portada__notas li {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+}
+
+.portada__notas .icono {
+  width: 1rem;
+  height: 1rem;
+  color: var(--color-acento);
+}
+
+/* Guía de descenso: una línea que baja en bucle. */
+.portada__descenso {
+  position: absolute;
+  bottom: var(--espacio-8);
+  left: 50%;
+  translate: -50% 0;
+  width: 1px;
+  height: 3.5rem;
+  overflow: hidden;
+}
+
+.portada__descenso-linea {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent, var(--color-primario));
+  animation: descender 2.6s ease-in-out infinite;
+}
+
+@media (max-width: 48rem) {
+  .portada__descenso {
+    display: none;
+  }
+}
+
+/* ---- Propuesta de valor -------------------------------------------------- */
+.propuesta {
+  background-color: var(--color-fondo);
+}
+
+.propuesta__interior {
+  max-width: 54rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-8);
+}
+
+.propuesta__texto {
+  font-family: var(--fuente-display);
+  font-size: clamp(1.6rem, 1.1rem + 2.1vw, 2.85rem);
+  font-weight: 300;
+  line-height: 1.32;
+  letter-spacing: -0.01em;
+  color: var(--color-tinta);
+}
+
+.propuesta__texto em {
+  font-style: italic;
+  color: var(--color-primario);
+}
+
+/* ---- Pilares -------------------------------------------------------------
+   El fondo de la franja lo aporta `.seccion-alterna` (base/layout.css).    */
+.pilares__lista {
+  display: grid;
+  gap: var(--espacio-6);
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+
+.pilar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+  padding: var(--espacio-8) var(--espacio-6);
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde-suave);
+  border-radius: var(--radio-lg);
+  transition:
+    transform var(--transicion),
+    box-shadow var(--transicion),
+    border-color var(--transicion);
+}
+
+.pilar::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-primario), var(--color-suave));
+  border-radius: var(--radio-lg) var(--radio-lg) 0 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transicion-lenta);
+}
+
+.pilar:hover {
+  transform: translateY(-6px);
+  border-color: transparent;
+  box-shadow: var(--sombra-media);
+}
+
+.pilar:hover::before {
+  transform: scaleX(1);
+}
+
+.pilar__icono {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  color: var(--color-primario);
+  background-color: rgba(145, 13, 43, 0.07);
+  border-radius: var(--radio-md);
+  transition: background-color var(--transicion), color var(--transicion);
+}
+
+.pilar:hover .pilar__icono {
+  background-color: var(--color-primario);
+  color: #fff;
+}
+
+.pilar__titulo {
+  font-size: var(--texto-xl);
+  font-weight: 500;
+  color: var(--color-primario-oscuro);
+}
+
+.pilar__texto {
+  font-size: var(--texto-md);
+  color: var(--color-tinta-media);
+}
+
+/* ---- Etapas -------------------------------------------------------------- */
+.etapas-inicio__lista {
+  border-top: 1px solid var(--color-borde-suave);
+}
+
+.etapa-fila {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--espacio-4) var(--espacio-6);
+  padding-block: var(--espacio-6);
+  border-bottom: 1px solid var(--color-borde-suave);
+  transition: background-color var(--transicion), padding-inline var(--transicion);
+}
+
+.etapa-fila:hover {
+  background-color: var(--color-superficie);
+  padding-inline: var(--espacio-5);
+}
+
+.etapa-fila__orden {
+  font-family: var(--fuente-display);
+  font-size: 1.5rem;
+  color: var(--color-suave);
+  transition: color var(--transicion);
+}
+
+.etapa-fila:hover .etapa-fila__orden {
+  color: var(--color-primario);
+}
+
+.etapa-fila__nombre {
+  font-family: var(--fuente-display);
+  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
+  color: var(--color-primario-oscuro);
+  min-width: 11ch;
+}
+
+.etapa-fila__resumen {
+  color: var(--color-tinta-media);
+  font-size: var(--texto-md);
+}
+
+.etapa-fila__enlace {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--color-primario);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-completo);
+  transition:
+    background-color var(--transicion),
+    color var(--transicion),
+    transform var(--transicion);
+}
+
+.etapa-fila:hover .etapa-fila__enlace {
+  background-color: var(--color-primario);
+  border-color: var(--color-primario);
+  color: #fff;
+  transform: translateX(4px);
+}
+
+@media (min-width: 56rem) {
+  .etapa-fila {
+    grid-template-columns: 3rem 16rem 1fr auto;
+  }
+}
+
+@media (max-width: 40rem) {
+  .etapa-fila {
+    grid-template-columns: auto 1fr;
+  }
+
+  .etapa-fila__resumen {
+    grid-column: 1 / -1;
+  }
+
+  .etapa-fila__enlace {
+    grid-row: 1;
+    grid-column: 2;
+    justify-self: end;
+  }
+
+  .etapa-fila__nombre {
+    grid-column: 1 / 2;
+  }
+}
+
+/* ---- Servicios destacados ------------------------------------------------ */
+.servicios-inicio__rejilla {
+  display: grid;
+  gap: var(--espacio-5);
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+}
+
+.tarjeta-servicio {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+  padding: var(--espacio-8);
+  background-color: var(--color-superficie);
+  border-radius: var(--radio-lg);
+  border: 1px solid var(--color-borde-suave);
+  transition: transform var(--transicion), box-shadow var(--transicion);
+}
+
+.tarjeta-servicio:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--sombra-media);
+}
+
+.tarjeta-servicio__icono {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: var(--color-acento);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-completo);
+  transition: transform var(--transicion-lenta);
+}
+
+.tarjeta-servicio:hover .tarjeta-servicio__icono {
+  transform: rotate(-10deg);
+}
+
+.tarjeta-servicio__titulo {
+  font-size: var(--texto-lg);
+  font-weight: 500;
+  color: var(--color-primario-oscuro);
+}
+
+.tarjeta-servicio__texto {
+  font-size: var(--texto-md);
+  color: var(--color-tinta-media);
+}
+
+.servicios-inicio__pie,
+.productos-inicio__pie {
+  margin-top: var(--espacio-10);
+  text-align: center;
+}
+
+/* ---- Productos destacados ------------------------------------------------ */
+.productos-inicio__rejilla {
+  display: grid;
+  gap: var(--espacio-6);
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
+
+.tarjeta-producto {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde-suave);
+  border-radius: var(--radio-lg);
+  overflow: hidden;
+  transition: transform var(--transicion), box-shadow var(--transicion);
+}
+
+.tarjeta-producto:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--sombra-media);
+}
+
+.tarjeta-producto__figura {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 10;
+  color: var(--color-primario);
+  background:
+    radial-gradient(70% 70% at 50% 45%, rgba(255, 255, 255, 0.75), transparent),
+    linear-gradient(140deg, var(--marca-arena), var(--marca-rosa));
+}
+
+.tarjeta-producto__figura .icono {
+  width: 3rem;
+  height: 3rem;
+  stroke-width: 1;
+  transition: transform var(--transicion-lenta);
+}
+
+.tarjeta-producto:hover .tarjeta-producto__figura .icono {
+  transform: scale(1.12) rotate(-6deg);
+}
+
+.tarjeta-producto__cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+  padding: var(--espacio-6);
+}
+
+.tarjeta-producto__formato {
+  font-size: var(--texto-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-tinta-suave);
+}
+
+.tarjeta-producto__titulo {
+  font-family: var(--fuente-display);
+  font-size: 1.5rem;
+  color: var(--color-primario-oscuro);
+}
+
+.tarjeta-producto__texto {
+  font-size: var(--texto-md);
+  color: var(--color-tinta-media);
+}
+
+.tarjeta-producto__precio {
+  margin-top: var(--espacio-2);
+  font-size: var(--texto-lg);
+  font-weight: 500;
+  color: var(--color-primario);
+}

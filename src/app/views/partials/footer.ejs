@@ -1,0 +1,78 @@
+<%#
+  ══════════════════════════════════════════════════════════════════════════
+  PARCIAL: PIE DE PÁGINA
+  ══════════════════════════════════════════════════════════════════════════
+
+  Cuatro bloques:
+    1. Marca      → emblema, nombre y eslogan
+    2. Navegación → los mismos enlaces del menú, desde el mismo modelo
+    3. Contacto   → correo, teléfono, Instagram y ubicación
+    4. Aviso      → advertencia sanitaria (obligatoria en un sitio de salud)
+    5. Cierre     → copyright y acceso al panel interno
+
+  Todos los datos salen de `site.model.js`: no hay un solo dato escrito a
+  mano que pueda quedar desactualizado.
+#%>
+<footer class="pie">
+  <div class="contenedor">
+
+    <div class="pie__superior">
+      <div class="pie__marca">
+        <img class="pie__emblema" src="/images/logo-emblema.svg" alt="" width="52" height="52">
+        <p class="pie__nombre"><%= brand.name %></p>
+        <p class="pie__eslogan"><%= brand.slogan %></p>
+        <p class="pie__descripcion"><%= brand.tagline %>.</p>
+      </div>
+
+      <nav class="pie__columna" aria-label="Navegación del pie">
+        <h2 class="pie__titulo">Navegación</h2>
+        <ul class="pie__lista">
+          <% navigation.forEach(function (enlace) { %>
+          <li><a href="<%= enlace.path %>"><%= enlace.label %></a></li>
+          <% }); %>
+        </ul>
+      </nav>
+
+      <div class="pie__columna">
+        <h2 class="pie__titulo">Contacto</h2>
+        <ul class="pie__lista pie__lista--contacto">
+          <li>
+            <svg class="icono" aria-hidden="true"><use href="#i-correo"></use></svg>
+            <a href="mailto:<%= brand.email %>"><%= brand.email %></a>
+          </li>
+          <li>
+            <svg class="icono" aria-hidden="true"><use href="#i-telefono"></use></svg>
+            <a href="tel:+57<%= brand.phone %>"><%= brand.phoneDisplay %></a>
+          </li>
+          <li>
+            <svg class="icono" aria-hidden="true"><use href="#i-instagram"></use></svg>
+            <a href="<%= brand.instagramUrl %>" target="_blank" rel="noopener noreferrer">@<%= brand.instagram %></a>
+          </li>
+          <li>
+            <svg class="icono" aria-hidden="true"><use href="#i-mapa"></use></svg>
+            <span><%= brand.neighborhood %>, <%= brand.city %> · <%= brand.country %></span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <%# ── BLOQUE 4: Aviso sanitario ───────────────────────────────────────
+        No es un formalismo: la empresa da orientación sobre salud, así que
+        debe quedar explícito que ni el sitio ni el agente de IA sustituyen a
+        un profesional. Aparece en TODAS las páginas por eso mismo. %>
+    <div class="pie__aviso">
+      <p>
+        El contenido de este sitio y las respuestas del asistente tienen fines
+        educativos y de orientación. No sustituyen la consulta, el diagnóstico
+        ni el tratamiento de un profesional de la salud. Ante una urgencia,
+        comunícate con la línea 123.
+      </p>
+    </div>
+
+    <div class="pie__inferior">
+      <p>&copy; <%= currentYear %> <%= brand.name %>. Proyecto empresarial · <%= brand.city %>, <%= brand.country %>.</p>
+      <a class="pie__acceso" href="/acceso">Acceso interno</a>
+    </div>
+
+  </div>
+</footer>

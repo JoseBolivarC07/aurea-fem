@@ -1,0 +1,78 @@
+<%#
+  ══════════════════════════════════════════════════════════════════════════
+  PARCIAL: WIDGET DEL AGENTE "AURA"
+  ══════════════════════════════════════════════════════════════════════════
+
+  El armazón del chat. Aquí solo está la ESTRUCTURA vacía; todo el contenido
+  (saludo, sugerencias, mensajes) lo genera `public/js/components/chat.js`.
+
+  ¿POR QUÉ VACÍO?
+  El saludo y las preguntas sugeridas llegan desde `/api/chat/estado`, no
+  escritos en este HTML. Así el tono del agente se define en un único lugar
+  del servidor (`prompt.service.js`), junto a sus instrucciones, y no queda
+  repartido entre el prompt y la plantilla.
+
+  Se incluye solo donde `showChat` es true (ver `layouts/main.ejs`).
+
+  Los atributos `data-chat-*` son los enganches que busca el JavaScript.
+
+  ESTRUCTURA:
+    · Lanzador  → el botón flotante que abre el panel
+    · Panel     → cabecera, mensajes, sugerencias, formulario y nota legal
+#%>
+<div class="chat" data-chat>
+
+  <button class="chat__lanzador" type="button"
+          data-chat-abrir
+          aria-expanded="false"
+          aria-controls="panel-chat">
+    <svg class="icono" aria-hidden="true"><use href="#i-chat"></use></svg>
+    <span class="chat__lanzador-texto">Habla con Aura</span>
+  </button>
+
+  <section class="chat__panel" id="panel-chat" data-chat-panel hidden
+           role="dialog" aria-modal="false" aria-labelledby="chat-titulo">
+
+    <header class="chat__cabecera">
+      <div class="chat__identidad">
+        <span class="chat__avatar" aria-hidden="true">A</span>
+        <div>
+          <h2 class="chat__titulo" id="chat-titulo">Aura</h2>
+          <p class="chat__estado" data-chat-estado>Orientadora de <%= brand.name %></p>
+        </div>
+      </div>
+      <button class="chat__cerrar" type="button" data-chat-cerrar aria-label="Cerrar el chat">
+        <svg class="icono" aria-hidden="true"><use href="#i-cerrar"></use></svg>
+      </button>
+    </header>
+
+    <%# Zona de mensajes. Empieza vacía y la va llenando el JavaScript.
+
+        `role="log"` + `aria-live="polite"` hacen que un lector de pantalla
+        anuncie los mensajes nuevos automáticamente, sin que haya que ir a
+        buscarlos. "polite" significa que espera a que termine de leer lo
+        que estuviera diciendo, en vez de interrumpir. %>
+    <div class="chat__mensajes" data-chat-mensajes role="log" aria-live="polite" aria-atomic="false"></div>
+
+    <%# Preguntas sugeridas. Nace oculto: solo aparece si el servidor
+        confirma que el servicio está disponible. %>
+    <div class="chat__sugerencias" data-chat-sugerencias hidden></div>
+
+    <form class="chat__formulario" data-chat-form autocomplete="off">
+      <label class="visualmente-oculto" for="chat-entrada">Escribe tu consulta</label>
+      <textarea class="chat__entrada" id="chat-entrada" name="mensaje"
+                rows="1" maxlength="1000" required
+                placeholder="Escribe tu consulta..."
+                data-chat-entrada></textarea>
+      <button class="chat__enviar" type="submit" data-chat-enviar aria-label="Enviar consulta">
+        <svg class="icono" aria-hidden="true"><use href="#i-enviar"></use></svg>
+      </button>
+    </form>
+
+    <p class="chat__nota">
+      Aura orienta y educa. No diagnostica ni receta: ante cualquier síntoma,
+      consulta a una profesional de la salud.
+    </p>
+
+  </section>
+</div>

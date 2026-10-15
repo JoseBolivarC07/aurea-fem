@@ -1,0 +1,238 @@
+/* ==========================================================================
+   Vista: Nosotras
+   ========================================================================== */
+
+/* ---- Declaraciones institucionales -------------------------------------- */
+.declaraciones__rejilla {
+  display: grid;
+  gap: var(--espacio-5);
+}
+
+@media (min-width: 56rem) {
+  .declaraciones__rejilla {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .declaracion--principal {
+    grid-column: 1 / -1;
+  }
+}
+
+.declaracion {
+  position: relative;
+  padding: clamp(2rem, 4vw, 3rem);
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde-suave);
+  border-radius: var(--radio-lg);
+  overflow: hidden;
+  transition: box-shadow var(--transicion), transform var(--transicion);
+}
+
+.declaracion:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sombra-media);
+}
+
+/* Comilla decorativa muy tenue, en la serif de marca. */
+.declaracion::after {
+  content: '"';
+  position: absolute;
+  right: 1.5rem;
+  bottom: -3rem;
+  font-family: var(--fuente-display);
+  font-size: 14rem;
+  line-height: 1;
+  color: rgba(145, 13, 43, 0.05);
+  pointer-events: none;
+}
+
+.declaracion__titulo {
+  font-size: var(--texto-xs);
+  font-weight: 600;
+  letter-spacing: var(--interletra-amplia);
+  text-transform: uppercase;
+  color: var(--color-acento);
+  margin-bottom: var(--espacio-5);
+}
+
+.declaracion__texto {
+  position: relative;
+  z-index: 1;
+  font-size: var(--texto-lg);
+  line-height: 1.75;
+  color: var(--color-tinta-media);
+}
+
+.declaracion--principal .declaracion__texto {
+  font-family: var(--fuente-display);
+  font-size: clamp(1.35rem, 1rem + 1.4vw, 2rem);
+  line-height: 1.45;
+  color: var(--color-tinta);
+}
+
+.declaracion--acento {
+  background: linear-gradient(150deg, var(--marca-arena), rgba(238, 173, 174, 0.4));
+  border-color: transparent;
+}
+
+/* ---- Valores -------------------------------------------------------------
+   El fondo de la franja lo aporta `.seccion-alterna` (base/layout.css).    */
+.valores__lista {
+  display: grid;
+  gap: var(--espacio-6);
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+}
+
+.valor {
+  padding-top: var(--espacio-5);
+  border-top: 1px solid var(--color-borde);
+  transition: border-color var(--transicion);
+}
+
+.valor:hover {
+  border-color: var(--color-primario);
+}
+
+.valor__nombre {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  font-family: var(--fuente-display);
+  font-size: 1.5rem;
+  color: var(--color-primario-oscuro);
+  margin-bottom: var(--espacio-3);
+}
+
+.valor__marca {
+  width: 0.4rem;
+  height: 0.4rem;
+  background-color: var(--color-acento);
+  border-radius: var(--radio-completo);
+  transition: transform var(--transicion), background-color var(--transicion);
+}
+
+.valor:hover .valor__marca {
+  transform: scale(1.6);
+  background-color: var(--color-primario);
+}
+
+.valor__texto {
+  font-size: var(--texto-md);
+  line-height: 1.7;
+  color: var(--color-tinta-media);
+}
+
+/* ---- Objetivos ----------------------------------------------------------- */
+.objetivos__interior {
+  max-width: 58rem;
+}
+
+.objetivos__lista {
+  display: flex;
+  flex-direction: column;
+}
+
+.objetivo {
+  display: grid;
+  grid-template-columns: 4rem 1fr;
+  gap: var(--espacio-4);
+  align-items: baseline;
+  padding-block: var(--espacio-6);
+  border-bottom: 1px solid var(--color-borde-suave);
+}
+
+.objetivo:first-child {
+  border-top: 1px solid var(--color-borde-suave);
+}
+
+.objetivo__numero {
+  font-family: var(--fuente-display);
+  font-size: 1.75rem;
+  color: var(--color-suave);
+  transition: color var(--transicion);
+}
+
+.objetivo:hover .objetivo__numero {
+  color: var(--color-primario);
+}
+
+.objetivo__texto {
+  font-size: var(--texto-lg);
+  line-height: 1.65;
+  color: var(--color-tinta-media);
+}
+
+@media (max-width: 34rem) {
+  .objetivo {
+    grid-template-columns: 1fr;
+    gap: var(--espacio-2);
+  }
+}
+
+/* ---- Equipo -------------------------------------------------------------- */
+.equipo__rejilla {
+  display: grid;
+  gap: var(--espacio-5);
+  grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr));
+}
+
+.integrante {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+  padding: var(--espacio-8) var(--espacio-6);
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde-suave);
+  border-radius: var(--radio-lg);
+  transition: transform var(--transicion), box-shadow var(--transicion);
+}
+
+.integrante:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--sombra-media);
+}
+
+.integrante__avatar {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-bottom: var(--espacio-3);
+  font-family: var(--fuente-display);
+  font-size: 1.25rem;
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: linear-gradient(140deg, var(--color-primario), var(--marca-vino));
+  border-radius: var(--radio-completo);
+  transition: transform var(--transicion);
+}
+
+.integrante:hover .integrante__avatar {
+  transform: scale(1.06) rotate(-5deg);
+}
+
+.integrante__nombre {
+  font-family: var(--fuente-display);
+  font-size: 1.5rem;
+  color: var(--color-primario-oscuro);
+}
+
+.integrante__cargo {
+  font-size: var(--texto-sm);
+  font-weight: 500;
+  color: var(--color-primario);
+}
+
+.integrante__area {
+  font-size: var(--texto-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-tinta-suave);
+}
+
+.integrante__texto {
+  margin-top: var(--espacio-3);
+  font-size: var(--texto-md);
+  line-height: 1.65;
+  color: var(--color-tinta-media);
+}

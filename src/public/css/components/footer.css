@@ -1,0 +1,142 @@
+/* ==========================================================================
+   Componente: Pie de página
+   ========================================================================== */
+
+.pie {
+  padding-block: clamp(3.5rem, 6vw, 5.5rem) var(--espacio-8);
+  background-color: var(--color-superficie-calida);
+  color: var(--color-tinta-media);
+  font-size: var(--texto-md);
+}
+
+.pie__superior {
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 4rem);
+  padding-bottom: var(--espacio-10);
+  border-bottom: 1px solid rgba(98, 7, 37, 0.14);
+}
+
+@media (min-width: 48rem) {
+  .pie__superior {
+    grid-template-columns: 1.6fr 1fr 1.3fr;
+  }
+}
+
+/* ---- Bloque de marca ---------------------------------------------------- */
+.pie__emblema {
+  width: 3.25rem;
+  height: 3.25rem;
+  margin-bottom: var(--espacio-4);
+}
+
+.pie__nombre {
+  font-family: var(--fuente-display);
+  font-size: 1.75rem;
+  color: var(--color-primario);
+  line-height: 1.1;
+}
+
+.pie__eslogan {
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: var(--interletra-amplia);
+  text-transform: uppercase;
+  color: var(--color-acento);
+  margin-top: var(--espacio-2);
+}
+
+.pie__descripcion {
+  margin-top: var(--espacio-4);
+  max-width: 34ch;
+  color: var(--color-tinta-media);
+}
+
+/* ---- Columnas de enlaces ------------------------------------------------ */
+.pie__titulo {
+  font-size: var(--texto-xs);
+  font-weight: 600;
+  letter-spacing: var(--interletra-media);
+  text-transform: uppercase;
+  color: var(--color-primario-oscuro);
+  margin-bottom: var(--espacio-5);
+}
+
+.pie__lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+}
+
+.pie__lista a {
+  position: relative;
+  display: inline-block;
+  transition: color var(--transicion), transform var(--transicion);
+}
+
+.pie__lista a:hover {
+  color: var(--color-primario);
+  transform: translateX(3px);
+}
+
+.pie__lista--contacto li {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+}
+
+.pie__lista--contacto .icono {
+  width: 1rem;
+  height: 1rem;
+  color: var(--color-acento);
+}
+
+/* ---- Aviso legal / sanitario -------------------------------------------- */
+.pie__aviso {
+  padding-block: var(--espacio-6);
+  border-bottom: 1px solid rgba(98, 7, 37, 0.14);
+}
+
+.pie__aviso p {
+  max-width: 68ch;
+  font-size: var(--texto-sm);
+  line-height: 1.65;
+  color: var(--color-tinta-suave);
+}
+
+/* ---- Línea final -------------------------------------------------------- */
+.pie__inferior {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-4);
+  padding-top: var(--espacio-6);
+  font-size: var(--texto-sm);
+  color: var(--color-tinta-suave);
+}
+
+.pie__acceso {
+  position: relative;
+  transition: color var(--transicion);
+}
+
+.pie__acceso::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: -2px;
+  height: 1px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--transicion);
+}
+
+.pie__acceso:hover {
+  color: var(--color-primario);
+}
+
+.pie__acceso:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}

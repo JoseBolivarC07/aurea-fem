@@ -1,0 +1,252 @@
+<%#
+  ══════════════════════════════════════════════════════════════════════════
+  VISTA: PORTADA
+  ══════════════════════════════════════════════════════════════════════════
+
+  Recorrido completo de la propuesta, en seis secciones que van de lo general
+  a lo concreto:
+
+    1. Portada    → eslogan, entrada y llamados a la acción
+    2. Propuesta  → la frase que explica por qué existe la empresa
+    3. Pilares    → los 4 compromisos de marca
+    4. Etapas     → las 5 etapas de vida acompañadas
+    5. Servicios  → qué ofrece la plataforma (los 4 destacados)
+    6. Productos  → 3 referencias del catálogo
+    7. Llamado    → invitación a abrir el chat
+
+  Esta vista NO contiene ningún dato escrito a mano: todo llega desde
+  `home.controller.js`, que a su vez lo pide a los modelos.
+
+  ANIMACIONES
+  El atributo `data-revelar` marca los elementos que aparecen con un
+  desvanecido al hacer scroll (ver `core/reveal.js`).
+
+  La variable `--retardo` escalona la entrada: cada unidad son 90 ms de
+  espera adicional. Así los elementos de un mismo bloque entran en cascada
+  en vez de todos a la vez, que se vería brusco.
+
+  Estilos exclusivos de esta vista: `/css/views/home.css`
+#%>
+
+<%# ── SECCIÓN 1: Portada ────────────────────────────────────────────────────
+    Ocupa la altura completa de la pantalla. Detrás, tres anillos
+    concéntricos flotan y se desplazan con el scroll (`views/home.js`). %>
+<section class="portada">
+  <div class="portada__aura" aria-hidden="true">
+    <span class="portada__anillo portada__anillo--1"></span>
+    <span class="portada__anillo portada__anillo--2"></span>
+    <span class="portada__anillo portada__anillo--3"></span>
+  </div>
+
+  <div class="contenedor portada__interior">
+    <p class="portada__antetitulo" data-revelar><%= brand.sector.split('·')[1].trim() %></p>
+
+    <%# El eslogan se parte en tres líneas para animarlas por separado y
+        controlar el corte exacto, en vez de dejarlo al azar del ancho de
+        pantalla. Sigue siendo un solo <h1> con un único texto. %>
+    <h1 class="portada__titulo" data-revelar style="--retardo: 1">
+      <span class="portada__linea">Cuidarte</span>
+      <span class="portada__linea portada__linea--enfasis">también es</span>
+      <span class="portada__linea">conocerte</span>
+    </h1>
+
+    <p class="portada__entrada" data-revelar style="--retardo: 2">
+      Acompañamos a las mujeres en cada etapa de su vida —pubertad, menstruación,
+      embarazo, menopausia y procesos médicos— con información confiable,
+      comunidad y productos de bienestar seleccionados con criterio.
+    </p>
+
+    <div class="portada__acciones" data-revelar style="--retardo: 3">
+      <button class="boton boton--primario" type="button" data-abrir-chat>
+        <svg class="icono" aria-hidden="true"><use href="#i-chat"></use></svg>
+        Consulta con Aura
+      </button>
+      <a class="boton boton--fantasma" href="/servicios">
+        Conoce la plataforma
+        <svg class="icono" aria-hidden="true"><use href="#i-flecha"></use></svg>
+      </a>
+    </div>
+
+    <ul class="portada__notas" data-revelar style="--retardo: 4">
+      <li><svg class="icono" aria-hidden="true"><use href="#i-escudo"></use></svg> Confidencial</li>
+      <li><svg class="icono" aria-hidden="true"><use href="#i-reloj"></use></svg> Disponible siempre</li>
+      <li><svg class="icono" aria-hidden="true"><use href="#i-check"></use></svg> Con respaldo profesional</li>
+    </ul>
+  </div>
+
+  <a class="portada__descenso" href="#propuesta" aria-label="Ir al siguiente bloque">
+    <span class="portada__descenso-linea" aria-hidden="true"></span>
+  </a>
+</section>
+
+
+<section class="propuesta" id="propuesta">
+  <div class="contenedor propuesta__interior">
+    <p class="etiqueta-seccion" data-revelar>Propuesta de valor</p>
+    <p class="propuesta__texto" data-revelar style="--retardo: 1">
+      Muchas mujeres crecen sin información confiable sobre su propio cuerpo.
+      <em>Áurea Fem existe para cambiar eso:</em> orientación educativa,
+      acompañamiento emocional y productos de bienestar reunidos en un mismo
+      lugar, para todas las etapas y no solo para una.
+    </p>
+  </div>
+</section>
+
+
+<section class="pilares seccion-alterna">
+  <div class="contenedor">
+    <header class="encabezado-seccion">
+      <p class="etiqueta-seccion" data-revelar>Lo que sostiene la marca</p>
+      <h2 class="titulo-seccion" data-revelar style="--retardo: 1">
+        Cuatro compromisos que no negociamos
+      </h2>
+    </header>
+
+    <%# El bucle recorre el array `pilares` del modelo. El `indice` alimenta
+        la variable --retardo: el primero entra sin espera, el segundo 90 ms
+        después, y así sucesivamente. %>
+    <ul class="pilares__lista">
+      <% pilares.forEach(function (pilar, indice) { %>
+      <li class="pilar" data-revelar style="--retardo: <%= indice %>">
+        <%# `<use>` reutiliza un símbolo del sprite de `partials/icons.ejs`.
+            El nombre viene del modelo: `icono: 'corazon'` → `#i-corazon`.
+            `aria-hidden` lo oculta a los lectores de pantalla: es
+            decorativo, y el título de al lado ya dice de qué se trata. %>
+        <span class="pilar__icono" aria-hidden="true">
+          <svg class="icono"><use href="#i-<%= pilar.icono %>"></use></svg>
+        </span>
+        <h3 class="pilar__titulo"><%= pilar.titulo %></h3>
+        <p class="pilar__texto"><%= pilar.texto %></p>
+      </li>
+      <% }); %>
+    </ul>
+  </div>
+</section>
+
+
+<section class="etapas-inicio">
+  <div class="contenedor">
+    <header class="encabezado-seccion encabezado-seccion--dividido">
+      <div>
+        <p class="etiqueta-seccion" data-revelar>Etapas que acompañamos</p>
+        <h2 class="titulo-seccion" data-revelar style="--retardo: 1">
+          La salud femenina no es un solo momento
+        </h2>
+      </div>
+      <p class="encabezado-seccion__apoyo" data-revelar style="--retardo: 2">
+        Otras marcas se detienen en la menstruación. Nosotras acompañamos las
+        cinco etapas en las que el cuerpo cambia y casi nadie explica cómo.
+      </p>
+    </header>
+
+    <ol class="etapas-inicio__lista">
+      <% etapas.forEach(function (etapa, indice) { %>
+      <li class="etapa-fila" data-revelar style="--retardo: <%= indice %>">
+        <span class="etapa-fila__orden"><%= etapa.orden %></span>
+        <h3 class="etapa-fila__nombre"><%= etapa.nombre %></h3>
+        <p class="etapa-fila__resumen"><%= etapa.resumen %></p>
+        <a class="etapa-fila__enlace" href="/servicios#<%= etapa.id %>"
+           aria-label="Ver el acompañamiento en la etapa <%= etapa.nombre %>">
+          <svg class="icono" aria-hidden="true"><use href="#i-flecha"></use></svg>
+        </a>
+      </li>
+      <% }); %>
+    </ol>
+  </div>
+</section>
+
+
+<section class="servicios-inicio seccion-alterna">
+  <div class="contenedor">
+    <header class="encabezado-seccion">
+      <p class="etiqueta-seccion" data-revelar>La plataforma</p>
+      <h2 class="titulo-seccion" data-revelar style="--retardo: 1">
+        Todo en un mismo lugar
+      </h2>
+    </header>
+
+    <div class="servicios-inicio__rejilla">
+      <% servicios.forEach(function (servicio, indice) { %>
+      <article class="tarjeta-servicio" data-revelar style="--retardo: <%= indice %>">
+        <span class="tarjeta-servicio__icono" aria-hidden="true">
+          <svg class="icono"><use href="#i-<%= servicio.icono %>"></use></svg>
+        </span>
+        <h3 class="tarjeta-servicio__titulo"><%= servicio.nombre %></h3>
+        <p class="tarjeta-servicio__texto"><%= servicio.resumen %></p>
+      </article>
+      <% }); %>
+    </div>
+
+    <p class="servicios-inicio__pie" data-revelar>
+      <a class="enlace-subrayado" href="/servicios">
+        Ver todos los servicios
+        <svg class="icono" aria-hidden="true"><use href="#i-flecha"></use></svg>
+      </a>
+    </p>
+  </div>
+</section>
+
+
+<section class="productos-inicio">
+  <div class="contenedor">
+    <header class="encabezado-seccion encabezado-seccion--dividido">
+      <div>
+        <p class="etiqueta-seccion" data-revelar>Bienestar femenino</p>
+        <h2 class="titulo-seccion" data-revelar style="--retardo: 1">
+          Productos que sí acompañan
+        </h2>
+      </div>
+      <p class="encabezado-seccion__apoyo" data-revelar style="--retardo: 2">
+        Cada referencia pasa por revisión antes de llegar a ti. Buscamos alivio
+        real, no promesas de etiqueta.
+      </p>
+    </header>
+
+    <div class="productos-inicio__rejilla">
+      <% productos.forEach(function (producto, indice) { %>
+      <article class="tarjeta-producto" data-revelar style="--retardo: <%= indice %>">
+        <div class="tarjeta-producto__figura" aria-hidden="true">
+          <svg class="icono"><use href="#i-hoja"></use></svg>
+        </div>
+        <div class="tarjeta-producto__cuerpo">
+          <p class="tarjeta-producto__formato"><%= producto.formato %></p>
+          <h3 class="tarjeta-producto__titulo"><%= producto.nombre %></h3>
+          <p class="tarjeta-producto__texto"><%= producto.resumen %></p>
+          <p class="tarjeta-producto__precio"><%= producto.precioFormateado %></p>
+        </div>
+      </article>
+      <% }); %>
+    </div>
+
+    <p class="productos-inicio__pie" data-revelar>
+      <a class="enlace-subrayado" href="/productos">
+        Ver el catálogo completo
+        <svg class="icono" aria-hidden="true"><use href="#i-flecha"></use></svg>
+      </a>
+    </p>
+  </div>
+</section>
+
+
+<section class="llamado">
+  <div class="contenedor llamado__interior" data-revelar>
+    <p class="etiqueta-seccion etiqueta-seccion--clara">Empieza por una pregunta</p>
+    <h2 class="llamado__titulo">
+      Lo que no te atreviste a preguntar, aquí se puede preguntar
+    </h2>
+    <p class="llamado__texto">
+      Aura es nuestra orientadora con inteligencia artificial. Responde en
+      privado, sin juzgar, y te dice con claridad cuándo conviene ver a una
+      profesional.
+    </p>
+    <div class="llamado__acciones">
+      <button class="boton boton--claro" type="button" data-abrir-chat>
+        <svg class="icono" aria-hidden="true"><use href="#i-chat"></use></svg>
+        Abrir el chat
+      </button>
+      <a class="boton boton--fantasma boton--fantasma-claro" href="/contacto">
+        Escribirle al equipo
+      </a>
+    </div>
+  </div>
+</section>

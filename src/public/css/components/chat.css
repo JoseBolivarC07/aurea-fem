@@ -1,0 +1,406 @@
+/* ==========================================================================
+   COMPONENTE: CHAT DE AURA
+   ==========================================================================
+
+   Lanzador flotante que se expande en un panel. En móvil ocupa casi toda la
+   pantalla; en escritorio se ancla a la esquina inferior derecha.
+
+   PARTES DEL COMPONENTE
+     .chat             → contenedor fijo en la esquina
+     .chat__lanzador   → el botón que abre el panel
+     .chat__panel      → el panel completo
+     .chat__cabecera   → franja con el avatar y el nombre
+     .chat__mensajes   → zona con scroll donde se apilan las burbujas
+     .burbuja          → cada mensaje (aura / usuaria / sistema)
+     .chat__formulario → campo de texto y botón de enviar
+
+   Se carga en TODAS las páginas (está en la base de `layout.js`) porque el
+   widget aparece en casi todas.
+
+   RELACIÓN CON EL JAVASCRIPT
+   El JS solo añade y quita clases de estado: `.es-abierto` en el contenedor
+   y `.esta-generando` en el botón de enviar. Todo el aspecto se resuelve
+   aquí; nada de estilos escritos desde JavaScript.
+   ========================================================================== */
+
+.chat {
+  position: fixed;
+  inset-block-end: clamp(1rem, 3vw, 1.75rem);
+  inset-inline-end: clamp(1rem, 3vw, 1.75rem);
+  z-index: var(--capa-chat);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--espacio-3);
+}
+
+/* ---- Lanzador ----------------------------------------------------------- */
+.chat__lanzador {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  height: 3.5rem;
+  padding-inline: var(--espacio-6);
+  color: #fff;
+  font-size: var(--texto-md);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  background: linear-gradient(140deg, var(--color-primario), var(--marca-vino));
+  border-radius: var(--radio-completo);
+  box-shadow: 0 16px 36px -14px rgba(98, 7, 37, 0.7);
+  transition:
+    transform var(--transicion),
+    box-shadow var(--transicion),
+    opacity var(--transicion);
+}
+
+.chat__lanzador:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 22px 46px -16px rgba(98, 7, 37, 0.8);
+}
+
+/* Halo que late suavemente para indicar que el asistente está disponible. */
+.chat__lanzador::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  border: 1px solid var(--marca-rosa);
+  opacity: 0;
+  animation: latido-anillo 3.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.chat.es-abierto .chat__lanzador {
+  opacity: 0;
+  transform: scale(0.9);
+  pointer-events: none;
+}
+
+/* ---- Panel -------------------------------------------------------------- */
+.chat__panel {
+  display: flex;
+  flex-direction: column;
+  width: min(23.5rem, calc(100vw - 2rem));
+  height: min(34rem, calc(100dvh - 8rem));
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde-suave);
+  border-radius: var(--radio-xl);
+  box-shadow: var(--sombra-alta);
+  overflow: hidden;
+  transform-origin: bottom right;
+  animation: aparecer-escala 320ms var(--curva-salida) both;
+}
+
+.chat__panel[hidden] {
+  display: none;
+}
+
+/* ---- Cabecera del panel -------------------------------------------------- */
+.chat__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-4);
+  padding: var(--espacio-4) var(--espacio-5);
+  background: linear-gradient(140deg, var(--color-primario), var(--marca-vino));
+  color: #fff;
+}
+
+.chat__identidad {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+}
+
+.chat__avatar {
+  display: grid;
+  place-items: center;
+  width: 2.375rem;
+  height: 2.375rem;
+  font-family: var(--fuente-display);
+  font-size: 1.25rem;
+  color: var(--color-primario);
+  background-color: var(--color-tinta-clara);
+  border-radius: var(--radio-completo);
+}
+
+.chat__titulo {
+  font-family: var(--fuente-display);
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.chat__estado {
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: rgba(247, 236, 236, 0.75);
+}
+
+.chat__estado.es-error {
+  color: var(--marca-rosa);
+}
+
+.chat__cerrar {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  color: rgba(255, 255, 255, 0.8);
+  border-radius: var(--radio-completo);
+  transition: background-color var(--transicion), color var(--transicion);
+}
+
+.chat__cerrar:hover {
+  background-color: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+/* ---- Zona de mensajes ---------------------------------------------------- */
+.chat__mensajes {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+  padding: var(--espacio-5);
+  background-color: var(--color-fondo);
+  scrollbar-width: thin;
+  scrollbar-color: var(--marca-arena) transparent;
+}
+
+.chat__mensajes::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat__mensajes::-webkit-scrollbar-thumb {
+  background-color: var(--marca-arena);
+  border-radius: var(--radio-completo);
+}
+
+.burbuja {
+  /* No llega al borde: deja ver que hay más espacio al otro lado, que es lo
+     que hace legible de un vistazo quién dijo cada cosa. */
+  max-width: 85%;
+  padding: var(--espacio-3) var(--espacio-4);
+  font-size: var(--texto-md);
+  line-height: 1.6;
+  border-radius: var(--radio-lg);
+  animation: aparecer-suave 340ms var(--curva-salida) both;
+
+  /* `pre-wrap` conserva los saltos de línea del texto original. Sin esto,
+     los párrafos de la respuesta se pegarían todos en un bloque. */
+  white-space: pre-wrap;
+
+  /* Permite partir una palabra larguísima (una URL, por ejemplo) en vez de
+     dejar que desborde el panel y aparezca scroll horizontal. */
+  overflow-wrap: anywhere;
+}
+
+.burbuja--aura {
+  align-self: flex-start;
+  color: var(--color-tinta);
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde-suave);
+  border-bottom-left-radius: var(--radio-sm);
+}
+
+.burbuja--usuaria {
+  align-self: flex-end;
+  color: #fff;
+  background-color: var(--color-primario);
+  border-bottom-right-radius: var(--radio-sm);
+}
+
+.burbuja--sistema {
+  align-self: center;
+  max-width: 100%;
+  font-size: var(--texto-sm);
+  color: var(--color-error);
+  background-color: rgba(160, 21, 48, 0.07);
+  border-radius: var(--radio-md);
+}
+
+.burbuja strong {
+  font-weight: 600;
+}
+
+.burbuja ul {
+  margin-top: var(--espacio-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+}
+
+.burbuja li {
+  position: relative;
+  padding-left: var(--espacio-4);
+}
+
+.burbuja li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 0.7em;
+  width: 5px;
+  height: 1px;
+  background-color: var(--color-acento);
+}
+
+/* Indicador de escritura. */
+.escribiendo {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding-block: var(--espacio-2);
+}
+
+.escribiendo span {
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-acento);
+  border-radius: var(--radio-completo);
+  animation: puntos-escribiendo 1.3s ease-in-out infinite;
+}
+
+.escribiendo span:nth-child(2) { animation-delay: 0.16s; }
+.escribiendo span:nth-child(3) { animation-delay: 0.32s; }
+
+/* ---- Sugerencias --------------------------------------------------------- */
+.chat__sugerencias {
+  display: flex;
+  gap: var(--espacio-2);
+  padding: 0 var(--espacio-5) var(--espacio-3);
+  overflow-x: auto;
+  scrollbar-width: none;
+  background-color: var(--color-fondo);
+}
+
+.chat__sugerencias::-webkit-scrollbar {
+  display: none;
+}
+
+.chat__sugerencias[hidden] {
+  display: none;
+}
+
+.sugerencia {
+  flex: none;
+  padding: 0.45rem 0.9rem;
+  font-size: var(--texto-xs);
+  color: var(--color-primario);
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-completo);
+  white-space: nowrap;
+  transition:
+    background-color var(--transicion),
+    border-color var(--transicion),
+    color var(--transicion);
+}
+
+.sugerencia:hover {
+  background-color: var(--color-primario);
+  border-color: var(--color-primario);
+  color: #fff;
+}
+
+/* ---- Formulario ---------------------------------------------------------- */
+.chat__formulario {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--espacio-2);
+  padding: var(--espacio-3) var(--espacio-4);
+  background-color: var(--color-superficie);
+  border-top: 1px solid var(--color-borde-suave);
+}
+
+.chat__entrada {
+  flex: 1;
+  max-height: 7rem;
+  padding: var(--espacio-3) var(--espacio-4);
+  font-size: var(--texto-md);
+  line-height: 1.5;
+  color: var(--color-tinta);
+  background-color: var(--color-fondo);
+  border: 1px solid var(--color-borde-suave);
+  border-radius: var(--radio-lg);
+  resize: none;
+  transition: border-color var(--transicion), box-shadow var(--transicion);
+}
+
+.chat__entrada::placeholder {
+  color: var(--color-tinta-suave);
+}
+
+.chat__entrada:focus {
+  outline: none;
+  border-color: var(--color-suave);
+  box-shadow: 0 0 0 3px rgba(238, 173, 174, 0.28);
+}
+
+.chat__enviar {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: none;
+  color: #fff;
+  background-color: var(--color-primario);
+  border-radius: var(--radio-completo);
+  transition: background-color var(--transicion), transform var(--transicion), opacity var(--transicion);
+}
+
+.chat__enviar:hover:not(:disabled) {
+  background-color: var(--color-primario-oscuro);
+  transform: scale(1.06);
+}
+
+.chat__enviar:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.chat__enviar.esta-generando .icono {
+  animation: girar 900ms linear infinite;
+}
+
+.chat__nota {
+  padding: 0 var(--espacio-5) var(--espacio-4);
+  font-size: 0.6875rem;
+  line-height: 1.45;
+  color: var(--color-tinta-suave);
+  background-color: var(--color-superficie);
+  text-align: center;
+}
+
+/* ---- Pantalla pequeña: el panel ocupa todo -------------------------------- */
+@media (max-width: 34rem) {
+  .chat {
+    inset-block-end: 1rem;
+    inset-inline: 1rem;
+    align-items: stretch;
+  }
+
+  .chat__panel {
+    width: 100%;
+    height: min(80dvh, 34rem);
+  }
+
+  .chat__lanzador {
+    align-self: flex-end;
+  }
+
+  .chat__lanzador-texto {
+    display: none;
+  }
+
+  .chat__lanzador {
+    width: 3.5rem;
+    padding-inline: 0;
+    justify-content: center;
+  }
+}

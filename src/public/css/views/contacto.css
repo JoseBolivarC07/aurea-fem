@@ -1,0 +1,113 @@
+/* ==========================================================================
+   Vista: Contacto
+   ========================================================================== */
+
+.contacto__rejilla {
+  display: grid;
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+@media (min-width: 56rem) {
+  .contacto__rejilla {
+    grid-template-columns: 1fr 1.15fr;
+  }
+}
+
+.contacto__subtitulo {
+  font-family: var(--fuente-display);
+  font-size: 1.85rem;
+  color: var(--color-primario-oscuro);
+  margin-bottom: var(--espacio-6);
+}
+
+/* ---- Canales directos ---------------------------------------------------- */
+.contacto__lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+}
+
+.contacto__lista li {
+  display: grid;
+  grid-template-columns: 2.75rem 1fr;
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: var(--espacio-4);
+  padding: var(--espacio-4);
+  border-radius: var(--radio-md);
+  transition: background-color var(--transicion);
+}
+
+.contacto__lista li:hover {
+  background-color: var(--color-superficie);
+}
+
+.contacto__icono {
+  grid-row: 1 / -1;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: var(--color-primario);
+  background-color: rgba(145, 13, 43, 0.06);
+  border-radius: var(--radio-completo);
+  transition: background-color var(--transicion), color var(--transicion);
+}
+
+.contacto__lista li:hover .contacto__icono {
+  background-color: var(--color-primario);
+  color: #fff;
+}
+
+.contacto__etiqueta {
+  font-size: var(--texto-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-tinta-suave);
+}
+
+.contacto__valor {
+  font-size: var(--texto-md);
+  color: var(--color-tinta);
+  transition: color var(--transicion);
+}
+
+a.contacto__valor:hover {
+  color: var(--color-primario);
+}
+
+/* ---- Bloque de urgencias ------------------------------------------------- */
+.contacto__urgencia {
+  margin-top: var(--espacio-8);
+  padding: var(--espacio-6);
+  background: linear-gradient(150deg, var(--marca-arena), rgba(238, 173, 174, 0.35));
+  border-radius: var(--radio-lg);
+}
+
+.contacto__urgencia h3 {
+  font-family: var(--fuente-display);
+  font-size: 1.35rem;
+  color: var(--color-primario-oscuro);
+  margin-bottom: var(--espacio-3);
+}
+
+.contacto__urgencia p {
+  font-size: var(--texto-md);
+  line-height: 1.7;
+  color: var(--color-tinta-media);
+}
+
+.contacto__urgencia strong {
+  color: var(--color-primario);
+  font-weight: 600;
+}
+
+/* ---- Caja del formulario ------------------------------------------------- */
+.contacto__formulario-caja {
+  padding: clamp(1.75rem, 4vw, 3rem);
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde-suave);
+  border-radius: var(--radio-xl);
+  box-shadow: var(--sombra-sutil);
+}

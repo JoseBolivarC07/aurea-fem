@@ -1,0 +1,127 @@
+/* ==========================================================================
+   TOKENS DE DISEÑO
+   ==========================================================================
+
+   Único lugar donde se definen colores, tipografías, ritmos y sombras.
+   Ningún componente debe escribir un valor "a mano": todo sale de aquí.
+
+   QUÉ ES UN TOKEN
+   Una variable CSS con un valor de diseño. En vez de escribir #910D2B en
+   cuarenta sitios, se escribe var(--color-primario). Si el rojo cambia, se
+   cambia una línea y se actualiza el sitio entero.
+
+   POR QUÉ ESTÁ TODO EN :root
+   `:root` es el elemento <html>. Las variables declaradas ahí las heredan
+   todos los elementos de la página, así que cualquier archivo CSS posterior
+   puede usarlas sin importar nada.
+
+   CÓMO ESTÁ ORGANIZADO
+   Primero la paleta corporativa con sus nombres reales de marca; después los
+   ROLES semánticos, que apuntan a esos colores. Esa doble capa es lo que
+   permite decir "el color primario ahora es el vino" cambiando una línea,
+   sin tener que buscar dónde se usaba cada tono.
+
+   ARCHIVO CLAVE PARA REDISEÑAR: casi cualquier ajuste visual del sitio
+   —colores, tamaños de letra, redondeos, velocidad de las animaciones— se
+   hace aquí, sin tocar ningún componente.
+   ========================================================================== */
+
+:root {
+  /* ---- Paleta corporativa (Fase 2 del documento de marca) --------------- */
+  --marca-vino: #620725;      /* Fuerza, seguridad, liderazgo               */
+  --marca-primario: #910d2b;  /* Pasión, valentía, empoderamiento (base)    */
+  --marca-coral: #c65060;     /* Inspiración y perseverancia                */
+  --marca-rosa: #eeadae;      /* Sensibilidad, empatía, amor propio         */
+  --marca-arena: #e2d5ca;     /* Calma, armonía, bienestar (base)           */
+
+  /* ---- Roles semánticos ------------------------------------------------ */
+  --color-primario: var(--marca-primario);
+  --color-primario-oscuro: var(--marca-vino);
+  --color-acento: var(--marca-coral);
+  --color-suave: var(--marca-rosa);
+
+  --color-fondo: #fbf8f6;
+  --color-fondo-alterno: #f5eee8;
+  --color-superficie: #ffffff;
+  --color-superficie-calida: var(--marca-arena);
+  --color-inverso: var(--marca-vino);
+
+  --color-tinta: #1d1418;
+  --color-tinta-media: #5c4e53;
+  --color-tinta-suave: #8a7b80;
+  --color-tinta-clara: #f7ecec;
+
+  --color-borde: rgba(98, 7, 37, 0.12);
+  --color-borde-suave: rgba(98, 7, 37, 0.07);
+  --color-borde-fuerte: rgba(98, 7, 37, 0.22);
+
+  --color-exito: #1f6b4a;
+  --color-error: #a01530;
+
+  /* ---- Tipografía ------------------------------------------------------ */
+  --fuente-base: 'Montserrat', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --fuente-display: 'Cormorant Garamond', 'Times New Roman', Georgia, serif;
+
+  /* Escala tipográfica con clamp(mínimo, preferido, máximo).
+     `clamp` hace que el texto crezca con el ancho de la pantalla pero sin
+     pasarse: en un móvil nunca baja del mínimo y en un monitor grande nunca
+     supera el máximo. Evita tener que escribir media queries para cada
+     tamaño de letra. La parte del medio combina rem (proporcional al tamaño
+     de fuente del sistema) con vw (proporcional al ancho de la ventana). */
+  --texto-xs: 0.75rem;
+  --texto-sm: 0.8125rem;
+  --texto-md: 0.9375rem;
+  --texto-base: 1rem;
+  --texto-lg: clamp(1.0625rem, 0.98rem + 0.4vw, 1.1875rem);
+  --texto-xl: clamp(1.25rem, 1.12rem + 0.6vw, 1.5rem);
+
+  --display-sm: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem);
+  --display-md: clamp(2.25rem, 1.7rem + 2.6vw, 3.5rem);
+  --display-lg: clamp(2.75rem, 1.9rem + 4vw, 5rem);
+  --display-xl: clamp(3.25rem, 1.6rem + 7vw, 7.5rem);
+
+  --interletra-amplia: 0.24em;
+  --interletra-media: 0.08em;
+
+  /* ---- Ritmo espacial (escala de 4 px) --------------------------------- */
+  --espacio-1: 0.25rem;
+  --espacio-2: 0.5rem;
+  --espacio-3: 0.75rem;
+  --espacio-4: 1rem;
+  --espacio-5: 1.25rem;
+  --espacio-6: 1.5rem;
+  --espacio-8: 2rem;
+  --espacio-10: 2.5rem;
+  --espacio-12: 3rem;
+  --espacio-16: 4rem;
+  --espacio-20: 5rem;
+
+  --seccion-y: clamp(4.5rem, 3rem + 6vw, 9rem);
+  --contenedor-max: 76rem;
+  --contenedor-estrecho: 46rem;
+  --contenedor-padding: clamp(1.25rem, 4vw, 2.5rem);
+
+  /* ---- Formas ---------------------------------------------------------- */
+  --radio-sm: 6px;
+  --radio-md: 12px;
+  --radio-lg: 20px;
+  --radio-xl: 28px;
+  --radio-completo: 999px;
+
+  /* ---- Sombras (tintadas con el vino de marca, nunca gris neutro) ------ */
+  --sombra-sutil: 0 1px 2px rgba(98, 7, 37, 0.04), 0 6px 18px -10px rgba(98, 7, 37, 0.14);
+  --sombra-media: 0 2px 4px rgba(98, 7, 37, 0.05), 0 20px 44px -22px rgba(98, 7, 37, 0.24);
+  --sombra-alta: 0 4px 8px rgba(98, 7, 37, 0.06), 0 36px 76px -30px rgba(98, 7, 37, 0.38);
+
+  /* ---- Movimiento ------------------------------------------------------ */
+  --curva-suave: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --curva-salida: cubic-bezier(0.16, 1, 0.3, 1);
+  --transicion-rapida: 180ms var(--curva-suave);
+  --transicion: 320ms var(--curva-suave);
+  --transicion-lenta: 720ms var(--curva-salida);
+
+  /* ---- Capas ----------------------------------------------------------- */
+  --capa-cabecera: 100;
+  --capa-menu: 110;
+  --capa-chat: 120;
+}

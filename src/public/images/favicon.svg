@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Áurea Fem">
+  <title>Áurea Fem</title>
+  <circle cx="60" cy="60" r="60" fill="#910D2B"/>
+  <!-- Versión simplificada del emblema: a 16 px los trazos finos desaparecen. -->
+  <g fill="none" stroke="#F7ECEC" stroke-width="5" stroke-linecap="round">
+    <ellipse cx="60" cy="35" rx="5.5" ry="9"/>
+    <path d="M60 80C56 62 45 48 32 47c-9-.8-13 8-6 13"/>
+    <path d="M60 80c4-18 15-32 28-33 9-.8 13 8 6 13"/>
+  </g>
+  <circle cx="60" cy="95" r="4.5" fill="#F7ECEC"/>
+</svg>

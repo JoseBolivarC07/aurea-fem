@@ -1,0 +1,250 @@
+/* ==========================================================================
+   Componente: Cabecera
+   Transparente sobre la portada y con fondo translúcido en cuanto se hace
+   scroll (`.es-desplazada`, la aplica main.js).
+   ========================================================================== */
+
+.cabecera {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: var(--capa-cabecera);
+  transition:
+    background-color var(--transicion),
+    box-shadow var(--transicion),
+    border-color var(--transicion);
+  border-bottom: 1px solid transparent;
+}
+
+.cabecera.es-desplazada {
+  background-color: rgba(251, 248, 246, 0.82);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border-bottom-color: var(--color-borde-suave);
+  box-shadow: var(--sombra-sutil);
+}
+
+.cabecera__interior {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-6);
+  min-height: 4.75rem;
+  transition: min-height var(--transicion);
+}
+
+.cabecera.es-desplazada .cabecera__interior {
+  min-height: 4rem;
+}
+
+/* ---- Marca -------------------------------------------------------------- */
+.cabecera__marca {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  flex: none;
+}
+
+.cabecera__emblema {
+  width: 2.5rem;
+  height: 2.5rem;
+  transition: transform var(--transicion-lenta);
+}
+
+.cabecera__marca:hover .cabecera__emblema {
+  transform: rotate(-8deg) scale(1.06);
+}
+
+.cabecera__texto {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.cabecera__nombre {
+  font-family: var(--fuente-display);
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--color-primario);
+}
+
+.cabecera__eslogan {
+  font-size: 0.5625rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-tinta-suave);
+}
+
+/* ---- Navegación --------------------------------------------------------- */
+.cabecera__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-8);
+}
+
+.cabecera__lista {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-6);
+}
+
+.cabecera__enlace {
+  position: relative;
+  display: inline-block;
+  padding-block: var(--espacio-2);
+  font-size: var(--texto-md);
+  font-weight: 400;
+  color: var(--color-tinta-media);
+  transition: color var(--transicion);
+}
+
+/* Subrayado que crece desde el centro. */
+.cabecera__enlace::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 1px;
+  background-color: var(--color-primario);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform var(--transicion);
+}
+
+.cabecera__enlace:hover {
+  color: var(--color-primario);
+}
+
+.cabecera__enlace:hover::after {
+  transform: scaleX(1);
+}
+
+.cabecera__enlace.es-activo {
+  color: var(--color-primario);
+  font-weight: 500;
+}
+
+.cabecera__enlace.es-activo::after {
+  transform: scaleX(1);
+  opacity: 0.45;
+}
+
+/* ---- Botón hamburguesa -------------------------------------------------- */
+.cabecera__hamburguesa {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: var(--color-primario);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-completo);
+  background-color: rgba(255, 255, 255, 0.6);
+  transition: background-color var(--transicion), border-color var(--transicion);
+}
+
+.cabecera__hamburguesa .icono {
+  width: 1.35rem;
+  height: 1.35rem;
+  transition: opacity var(--transicion), transform var(--transicion);
+}
+
+.cabecera__hamburguesa .icono--cerrar {
+  position: absolute;
+  opacity: 0;
+  transform: rotate(-90deg);
+}
+
+.cabecera__hamburguesa[aria-expanded='true'] .icono:first-of-type {
+  opacity: 0;
+  transform: rotate(90deg);
+}
+
+.cabecera__hamburguesa[aria-expanded='true'] .icono--cerrar {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+/* ---- Adaptación a pantallas pequeñas ------------------------------------ */
+@media (max-width: 60rem) {
+  .cabecera__hamburguesa {
+    display: inline-flex;
+    position: relative;
+    z-index: var(--capa-menu);
+  }
+
+  .cabecera__nav {
+    position: fixed;
+    inset: 0;
+    z-index: calc(var(--capa-menu) - 1);
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: var(--espacio-6);
+    padding: var(--contenedor-padding);
+    padding-top: 7rem;
+    background-color: var(--color-fondo);
+    /* Se cierra deslizando hacia arriba y desvaneciéndose. */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-1.5rem);
+    transition:
+      opacity var(--transicion),
+      transform var(--transicion),
+      visibility var(--transicion);
+  }
+
+  .cabecera__nav.es-abierto {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .cabecera__lista {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--espacio-2);
+    width: 100%;
+  }
+
+  .cabecera__lista li {
+    width: 100%;
+    border-bottom: 1px solid var(--color-borde-suave);
+  }
+
+  .cabecera__enlace {
+    display: block;
+    width: 100%;
+    padding-block: var(--espacio-4);
+    font-family: var(--fuente-display);
+    font-size: 1.75rem;
+    color: var(--color-primario-oscuro);
+  }
+
+  .cabecera__enlace::after {
+    display: none;
+  }
+
+  /* Entrada escalonada de los enlaces al abrir el menú. */
+  .cabecera__nav.es-abierto .cabecera__lista li {
+    animation: aparecer-suave 420ms var(--curva-salida) both;
+  }
+
+  .cabecera__nav.es-abierto .cabecera__lista li:nth-child(1) { animation-delay: 60ms; }
+  .cabecera__nav.es-abierto .cabecera__lista li:nth-child(2) { animation-delay: 110ms; }
+  .cabecera__nav.es-abierto .cabecera__lista li:nth-child(3) { animation-delay: 160ms; }
+  .cabecera__nav.es-abierto .cabecera__lista li:nth-child(4) { animation-delay: 210ms; }
+  .cabecera__nav.es-abierto .cabecera__lista li:nth-child(5) { animation-delay: 260ms; }
+
+  .cabecera__cta {
+    width: 100%;
+  }
+}
+
+@media (max-width: 26rem) {
+  .cabecera__eslogan {
+    display: none;
+  }
+}

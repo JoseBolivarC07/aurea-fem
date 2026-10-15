@@ -1,0 +1,47 @@
+<section class="acceso">
+  <div class="contenedor acceso__interior">
+
+    <div class="acceso__caja" data-revelar>
+      <img class="acceso__emblema" src="/images/logo-emblema.svg" alt="" width="56" height="56">
+      <h1 class="acceso__titulo">Acceso interno</h1>
+      <p class="acceso__texto">
+        Área reservada para el equipo de <%= brand.name %>.
+      </p>
+
+      <% if (aviso) { %>
+      <div class="alerta alerta--aviso" role="status"><%= aviso %></div>
+      <% } %>
+
+      <% if (error) { %>
+      <div class="alerta alerta--error" role="alert"><%= error %></div>
+      <% } %>
+
+      <form class="formulario" method="post" action="/acceso" autocomplete="off">
+        <div class="campo">
+          <label class="campo__etiqueta" for="usuario">Usuario</label>
+          <input class="campo__control" type="text" id="usuario" name="usuario"
+                 required autocomplete="username" value="<%= valores.usuario || '' %>">
+        </div>
+
+        <div class="campo">
+          <label class="campo__etiqueta" for="contrasena">Contraseña</label>
+          <input class="campo__control" type="password" id="contrasena" name="contrasena"
+                 required autocomplete="current-password">
+        </div>
+
+        <button class="boton boton--primario boton--ancho" type="submit">Ingresar</button>
+      </form>
+
+      <p class="acceso__modo">
+        Autenticación:
+        <strong><%= modo === 'ldap' ? 'directorio LDAP' : 'local' %></strong>
+        <% if (modo === 'ldap' && !ldapDisponible) { %>
+        · <span class="acceso__alerta">servidor no configurado</span>
+        <% } %>
+      </p>
+
+      <a class="acceso__volver" href="/">Volver al sitio</a>
+    </div>
+
+  </div>
+</section>

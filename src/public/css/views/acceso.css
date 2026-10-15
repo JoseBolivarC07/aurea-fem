@@ -1,0 +1,158 @@
+/* ==========================================================================
+   Vista: Acceso interno y panel
+   ========================================================================== */
+
+.acceso {
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  padding-block: 8rem 4rem !important;
+  background:
+    radial-gradient(50% 45% at 50% 0%, rgba(238, 173, 174, 0.3), transparent 70%),
+    var(--color-fondo);
+}
+
+.acceso__interior {
+  display: grid;
+  place-items: center;
+}
+
+.acceso__caja {
+  width: min(26rem, 100%);
+  padding: clamp(2rem, 5vw, 3rem);
+  text-align: center;
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde-suave);
+  border-radius: var(--radio-xl);
+  box-shadow: var(--sombra-media);
+}
+
+.acceso__emblema {
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-inline: auto;
+  margin-bottom: var(--espacio-5);
+}
+
+.acceso__titulo {
+  font-family: var(--fuente-display);
+  font-size: 2rem;
+  color: var(--color-primario-oscuro);
+}
+
+.acceso__texto {
+  margin-block: var(--espacio-2) var(--espacio-8);
+  font-size: var(--texto-md);
+  color: var(--color-tinta-media);
+}
+
+.acceso .formulario {
+  text-align: left;
+}
+
+.acceso__modo {
+  margin-top: var(--espacio-6);
+  padding-top: var(--espacio-5);
+  border-top: 1px solid var(--color-borde-suave);
+  font-size: var(--texto-xs);
+  letter-spacing: 0.04em;
+  color: var(--color-tinta-suave);
+}
+
+.acceso__alerta {
+  color: var(--color-error);
+}
+
+.acceso__volver {
+  display: inline-block;
+  margin-top: var(--espacio-4);
+  font-size: var(--texto-sm);
+  color: var(--color-primario);
+  transition: opacity var(--transicion);
+}
+
+.acceso__volver:hover {
+  opacity: 0.7;
+}
+
+/* ---- Panel interno ------------------------------------------------------- */
+.panel {
+  padding-block: 8rem var(--seccion-y) !important;
+}
+
+.panel__cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--espacio-6);
+  padding-bottom: var(--espacio-8);
+  margin-bottom: var(--espacio-10);
+  border-bottom: 1px solid var(--color-borde-suave);
+}
+
+.panel__titulo {
+  margin-top: var(--espacio-3);
+  font-family: var(--fuente-display);
+  font-size: var(--display-sm);
+  color: var(--color-primario-oscuro);
+}
+
+.panel__texto {
+  margin-top: var(--espacio-2);
+  font-size: var(--texto-md);
+  color: var(--color-tinta-media);
+}
+
+.panel__vacio {
+  padding-block: var(--espacio-16);
+  text-align: center;
+  color: var(--color-tinta-suave);
+}
+
+.panel__mensajes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+.mensaje {
+  padding: var(--espacio-5) var(--espacio-6);
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde-suave);
+  border-radius: var(--radio-lg);
+  transition: box-shadow var(--transicion);
+}
+
+.mensaje:hover {
+  box-shadow: var(--sombra-sutil);
+}
+
+.mensaje__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--espacio-2) var(--espacio-4);
+  margin-bottom: var(--espacio-3);
+  font-size: var(--texto-sm);
+}
+
+.mensaje__nombre {
+  font-weight: 600;
+  color: var(--color-primario-oscuro);
+}
+
+.mensaje__correo {
+  color: var(--color-primario);
+}
+
+.mensaje__fecha {
+  color: var(--color-tinta-suave);
+}
+
+.mensaje__texto {
+  font-size: var(--texto-md);
+  line-height: 1.7;
+  color: var(--color-tinta-media);
+  white-space: pre-wrap;
+}

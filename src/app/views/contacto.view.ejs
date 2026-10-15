@@ -1,0 +1,177 @@
+<%#
+  ══════════════════════════════════════════════════════════════════════════
+  VISTA: CONTACTO
+  ══════════════════════════════════════════════════════════════════════════
+
+  Dos columnas:
+    Izquierda → canales directos (correo, teléfono, redes, ubicación) y el
+                bloque de líneas de urgencia
+    Derecha   → el formulario
+
+  ESTA VISTA SE RENDERIZA EN TRES SITUACIONES
+    a) GET normal              → formulario vacío
+    b) GET tras enviar bien    → `enviado` es true, se muestra el éxito
+    c) POST fallido            → `errores` tiene contenido y `valores` trae
+                                 lo que ya se había escrito
+
+  Por eso el controlador siempre define `valores`, `errores` y `enviado`,
+  aunque estén vacíos: EJS falla con una variable no definida.
+
+  El formulario funciona SIN JavaScript: es un <form method="post"> normal.
+  `/js/views/contacto.js` solo añade el contador y los avisos inmediatos.
+
+  Estilos: `page-header.css` + `form.css` (compartidos) + `contacto.css`
+#%>
+<%- include('partials/encabezado-pagina', {
+      paginaEtiqueta: 'Contacto',
+      paginaTitulo: 'Escríbenos y te respondemos',
+      paginaTexto: 'Dudas sobre la plataforma, los productos o el acompañamiento. También si eres profesional de la salud y quieres ser parte del directorio.'
+    }) %>
+
+
+<section class="contacto">
+  <div class="contenedor contacto__rejilla">
+
+    <div class="contacto__datos" data-revelar>
+      <h2 class="contacto__subtitulo">Canales directos</h2>
+
+      <ul class="contacto__lista">
+        <li>
+          <span class="contacto__icono" aria-hidden="true">
+            <svg class="icono"><use href="#i-correo"></use></svg>
+          </span>
+          <span class="contacto__etiqueta">Correo</span>
+          <a class="contacto__valor" href="mailto:<%= brand.email %>"><%= brand.email %></a>
+        </li>
+        <li>
+          <span class="contacto__icono" aria-hidden="true">
+            <svg class="icono"><use href="#i-telefono"></use></svg>
+          </span>
+          <span class="contacto__etiqueta">Teléfono</span>
+          <a class="contacto__valor" href="tel:+57<%= brand.phone %>"><%= brand.phoneDisplay %></a>
+        </li>
+        <li>
+          <span class="contacto__icono" aria-hidden="true">
+            <svg class="icono"><use href="#i-instagram"></use></svg>
+          </span>
+          <span class="contacto__etiqueta">Instagram</span>
+          <a class="contacto__valor" href="<%= brand.instagramUrl %>" target="_blank" rel="noopener noreferrer">@<%= brand.instagram %></a>
+        </li>
+        <li>
+          <span class="contacto__icono" aria-hidden="true">
+            <svg class="icono"><use href="#i-mapa"></use></svg>
+          </span>
+          <span class="contacto__etiqueta">Ubicación</span>
+          <span class="contacto__valor"><%= brand.neighborhood %>, <%= brand.city %><br><%= brand.country %></span>
+        </li>
+      </ul>
+
+      <%# Bloque de urgencias. Es un requisito ético, no un adorno: un
+          formulario de contacto puede tardar días en responderse, y alguien
+          en crisis necesita un número al que llamar AHORA. Por eso está
+          destacado visualmente y antes del formulario. %>
+      <div class="contacto__urgencia">
+        <h3>¿Es una urgencia?</h3>
+        <p>
+          Este formulario no atiende emergencias. Si estás en riesgo, llama al
+          <strong>123</strong>. Si necesitas apoyo emocional inmediato en
+          Medellín, la Línea Amiga Saludable atiende en el
+          <strong>604 444 44 48</strong>.
+        </p>
+      </div>
+    </div>
+
+    <div class="contacto__formulario-caja" id="formulario" data-revelar style="--retardo: 1">
+
+      <% if (enviado) { %>
+      <div class="alerta alerta--exito" role="status">
+        <svg class="icono" aria-hidden="true"><use href="#i-check"></use></svg>
+        <div>
+          <strong>Mensaje recibido.</strong>
+          Gracias por escribirnos. Te responderemos al correo que nos dejaste.
+        </div>
+      </div>
+      <% } %>
+
+      <% if (Object.keys(errores).length > 0) { %>
+      <div class="alerta alerta--error" role="alert">
+        <strong>Revisa los campos marcados</strong> para poder enviar el mensaje.
+      </div>
+      <% } %>
+
+      <h2 class="contacto__subtitulo">Cuéntanos</h2>
+
+      <%# `novalidate` desactiva los mensajes de error del navegador. No es
+          por quitar validación —el servidor valida igual y el JavaScript
+          también—, sino porque esos mensajes salen en el idioma del sistema
+          operativo y con un estilo imposible de personalizar. Así los avisos
+          son siempre en español y con la voz de la marca. %>
+      <form class="formulario" method="post" action="/contacto" novalidate data-form-contacto>
+
+        <%# Cada campo repite el mismo patrón:
+            · La clase `tiene-error` pinta el borde de rojo si hubo fallo.
+            · `value` devuelve lo escrito, para no perderlo al fallar.
+            · `aria-invalid` y `aria-describedby` conectan el campo con su
+              mensaje de error para los lectores de pantalla. %>
+        <div class="campo<%= errores.nombre ? ' tiene-error' : '' %>">
+          <label class="campo__etiqueta" for="nombre">Nombre</label>
+          <input class="campo__control" type="text" id="nombre" name="nombre"
+                 maxlength="80" required autocomplete="name"
+                 value="<%= valores.nombre || '' %>"
+                 <%= errores.nombre ? 'aria-invalid="true" aria-describedby="error-nombre"' : '' %>>
+          <% if (errores.nombre) { %>
+          <p class="campo__error" id="error-nombre"><%= errores.nombre %></p>
+          <% } %>
+        </div>
+
+        <div class="campo<%= errores.correo ? ' tiene-error' : '' %>">
+          <label class="campo__etiqueta" for="correo">Correo electrónico</label>
+          <input class="campo__control" type="email" id="correo" name="correo"
+                 maxlength="254" required autocomplete="email"
+                 value="<%= valores.correo || '' %>"
+                 <%= errores.correo ? 'aria-invalid="true" aria-describedby="error-correo"' : '' %>>
+          <% if (errores.correo) { %>
+          <p class="campo__error" id="error-correo"><%= errores.correo %></p>
+          <% } %>
+        </div>
+
+        <div class="campo">
+          <label class="campo__etiqueta" for="etapa">
+            Etapa <span class="campo__opcional">(opcional)</span>
+          </label>
+          <div class="campo__selector">
+            <select class="campo__control" id="etapa" name="etapa">
+              <option value="">Prefiero no decirlo</option>
+              <% etapas.forEach(function (etapa) { %>
+              <option value="<%= etapa.id %>" <%= valores.etapa === etapa.id ? 'selected' : '' %>><%= etapa.nombre %></option>
+              <% }); %>
+            </select>
+          </div>
+        </div>
+
+        <div class="campo<%= errores.mensaje ? ' tiene-error' : '' %>">
+          <label class="campo__etiqueta" for="mensaje">Mensaje</label>
+          <textarea class="campo__control campo__control--area" id="mensaje" name="mensaje"
+                    rows="5" maxlength="1200" required
+                    <%= errores.mensaje ? 'aria-invalid="true" aria-describedby="error-mensaje"' : '' %>><%= valores.mensaje || '' %></textarea>
+          <p class="campo__ayuda"><span data-contador>0</span> / 1200 caracteres</p>
+          <% if (errores.mensaje) { %>
+          <p class="campo__error" id="error-mensaje"><%= errores.mensaje %></p>
+          <% } %>
+        </div>
+
+        <p class="formulario__nota">
+          Tus datos se usan únicamente para responderte. No los compartimos con
+          terceros.
+        </p>
+
+        <button class="boton boton--primario boton--ancho" type="submit">
+          Enviar mensaje
+          <svg class="icono" aria-hidden="true"><use href="#i-flecha"></use></svg>
+        </button>
+
+      </form>
+    </div>
+
+  </div>
+</section>

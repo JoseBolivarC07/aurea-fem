@@ -1,0 +1,147 @@
+/* ==========================================================================
+   Componente: Botón
+   Una sola base y variantes por modificador. El brillo que cruza el botón al
+   pasar el cursor es un pseudo-elemento: no añade nodos al HTML.
+   ========================================================================== */
+
+.boton {
+  --boton-alto: 3.25rem;
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacio-2);
+  min-height: var(--boton-alto);
+  padding-inline: var(--espacio-8);
+  font-size: var(--texto-md);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  border-radius: var(--radio-completo);
+  border: 1px solid transparent;
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    background-color var(--transicion),
+    border-color var(--transicion),
+    color var(--transicion),
+    transform var(--transicion-rapida),
+    box-shadow var(--transicion);
+}
+
+.boton .icono {
+  width: 1.15em;
+  height: 1.15em;
+  transition: transform var(--transicion);
+}
+
+.boton:active {
+  transform: translateY(1px);
+}
+
+.boton[disabled],
+.boton[aria-disabled='true'] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Brillo diagonal que recorre el botón al pasar el cursor. */
+.boton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.22) 50%,
+    transparent 70%
+  );
+  transform: translateX(-110%);
+  transition: transform 620ms var(--curva-salida);
+}
+
+.boton:hover::after {
+  transform: translateX(110%);
+}
+
+/* ---- Variantes ---------------------------------------------------------- */
+.boton--primario {
+  background-color: var(--color-primario);
+  color: #fff;
+  box-shadow: 0 12px 28px -16px rgba(145, 13, 43, 0.75);
+}
+
+.boton--primario:hover {
+  background-color: var(--color-primario-oscuro);
+  box-shadow: 0 18px 38px -18px rgba(98, 7, 37, 0.85);
+}
+
+.boton--primario:hover .icono {
+  transform: translateX(3px);
+}
+
+.boton--contorno {
+  color: var(--color-primario);
+  border-color: var(--color-borde-fuerte);
+  background-color: transparent;
+}
+
+.boton--contorno:hover {
+  background-color: var(--color-primario);
+  border-color: var(--color-primario);
+  color: #fff;
+}
+
+.boton--fantasma {
+  color: var(--color-tinta);
+  border-color: var(--color-borde);
+  background-color: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(6px);
+}
+
+.boton--fantasma:hover {
+  border-color: var(--color-borde-fuerte);
+  background-color: var(--color-superficie);
+  color: var(--color-primario);
+}
+
+.boton--fantasma:hover .icono {
+  transform: translateX(3px);
+}
+
+.boton--fantasma-claro {
+  color: var(--color-tinta-clara);
+  border-color: rgba(247, 236, 236, 0.32);
+  background-color: transparent;
+  backdrop-filter: none;
+}
+
+.boton--fantasma-claro:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(247, 236, 236, 0.6);
+  color: #fff;
+}
+
+.boton--claro {
+  background-color: var(--color-tinta-clara);
+  color: var(--color-primario-oscuro);
+}
+
+.boton--claro:hover {
+  background-color: #fff;
+}
+
+/* ---- Tamaños ------------------------------------------------------------ */
+.boton--compacto {
+  --boton-alto: 2.5rem;
+  padding-inline: var(--espacio-5);
+  font-size: var(--texto-sm);
+}
+
+.boton--ancho {
+  width: 100%;
+}

@@ -1,0 +1,167 @@
+/* ==========================================================================
+   LAYOUT
+   ==========================================================================
+
+   Contenedores, ritmo vertical de las secciones y utilidades transversales.
+
+   Es la "rejilla invisible" del sitio: define dónde empieza y termina el
+   contenido y cuánto aire hay entre bloques. Gracias a esto, las hojas de
+   cada vista solo tienen que ocuparse de su propio contenido.
+   ========================================================================== */
+
+/* ---- Contenedor principal ------------------------------------------------
+   Centra el contenido y le pone un ancho máximo. Sin él, en un monitor
+   grande las líneas de texto se harían tan largas que costaría seguir la
+   lectura de una línea a la siguiente.
+
+   `margin-inline: auto` centra; `padding-inline` reserva un margen lateral
+   que crece con la pantalla (de 1.25rem en móvil a 2.5rem en escritorio),
+   para que el texto nunca toque el borde.
+
+   Las propiedades `inline` en vez de `left/right` son la forma moderna:
+   se adaptan solas a idiomas que se leen de derecha a izquierda.          */
+.contenedor {
+  width: 100%;
+  max-width: var(--contenedor-max);
+  margin-inline: auto;
+  padding-inline: var(--contenedor-padding);
+}
+
+.contenedor--estrecho {
+  max-width: var(--contenedor-estrecho);
+}
+
+/* ---- Ritmo vertical -----------------------------------------------------
+   Una sola regla da a TODAS las secciones el mismo respiro arriba y abajo.
+   Es lo que hace que la página se sienta ordenada sin que cada vista tenga
+   que acordarse de poner su propio margen.
+
+   El `position: relative` no es decorativo: convierte cada sección en el
+   punto de referencia de sus elementos absolutos (los anillos de la
+   portada, los degradados de las franjas alternas).                       */
+main > section {
+  padding-block: var(--seccion-y);
+  position: relative;
+}
+
+/* ---- Secciones con fondo alterno ---------------------------------------
+   El degradado en los bordes evita el corte duro entre franjas: es el
+   "desvanecido" que mantiene la página continua en lugar de segmentada.  */
+.seccion-alterna {
+  background-color: var(--color-fondo-alterno);
+}
+
+.seccion-alterna::before,
+.seccion-alterna::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  height: 7rem;
+  pointer-events: none;
+}
+
+.seccion-alterna::before {
+  top: 0;
+  background: linear-gradient(to bottom, var(--color-fondo), transparent);
+}
+
+.seccion-alterna::after {
+  bottom: 0;
+  background: linear-gradient(to top, var(--color-fondo), transparent);
+}
+
+/* Los pseudo-elementos están posicionados, así que se pintan por encima del
+   contenido normal. Elevar el contenedor evita que el degradado atenúe el
+   texto de la parte superior e inferior de la franja. */
+.seccion-alterna > .contenedor {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- Salto al contenido (accesibilidad) --------------------------------- */
+.skip-link {
+  position: absolute;
+  top: var(--espacio-3);
+  left: var(--espacio-3);
+  z-index: 1000;
+  padding: var(--espacio-3) var(--espacio-5);
+  background-color: var(--color-primario);
+  color: #fff;
+  font-size: var(--texto-sm);
+  font-weight: 500;
+  border-radius: var(--radio-sm);
+  transform: translateY(-160%);
+  transition: transform var(--transicion);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* ---- Utilidades --------------------------------------------------------- */
+.visualmente-oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Franja final de llamado a la acción, sobre fondo vino. */
+.llamado {
+  background:
+    radial-gradient(120% 120% at 50% 0%, rgba(198, 80, 96, 0.45), transparent 62%),
+    linear-gradient(160deg, var(--marca-vino), #4c0520);
+  color: var(--color-tinta-clara);
+  overflow: hidden;
+}
+
+.llamado::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.16) 1px, transparent 1px);
+  background-size: 34px 34px;
+  opacity: 0.35;
+  mask-image: radial-gradient(70% 70% at 50% 40%, #000, transparent);
+  pointer-events: none;
+}
+
+.llamado--sobrio {
+  background: linear-gradient(160deg, var(--marca-vino), #6f0d2a);
+}
+
+.llamado__interior {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espacio-5);
+  text-align: center;
+  max-width: 44rem;
+}
+
+.llamado__titulo {
+  font-family: var(--fuente-display);
+  font-size: var(--display-md);
+  color: #fff;
+  max-width: 18ch;
+}
+
+.llamado__texto {
+  color: rgba(247, 236, 236, 0.82);
+  font-size: var(--texto-lg);
+  max-width: 48ch;
+}
+
+.llamado__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--espacio-3);
+  margin-top: var(--espacio-3);
+}

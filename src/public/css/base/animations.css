@@ -1,0 +1,144 @@
+/* ==========================================================================
+   ANIMACIONES
+   ==========================================================================
+
+   Dos ideas rigen todo el movimiento del sitio:
+     1. Nada se mueve más de lo necesario (desplazamientos cortos, sin rebotes).
+     2. Todo entra con un desvanecido; nada aparece de golpe.
+
+   REPARTO DE TRABAJO CON EL JAVASCRIPT
+   Aquí se define CÓMO se ve la animación. El JavaScript solo decide CUÁNDO
+   añadir la clase que la dispara. Esa separación importa: el navegador puede
+   ejecutar animaciones CSS en la tarjeta gráfica, fuera del hilo principal,
+   mientras que animar con JavaScript obliga a recalcular en cada fotograma.
+
+   POR QUÉ SOLO SE ANIMAN `opacity`, `transform` y `filter`
+   Son las tres propiedades que el navegador puede animar sin rehacer el
+   diseño de la página. Animar `width`, `top` o `margin` obliga a recalcular
+   la posición de todo lo demás en cada fotograma, y ahí aparecen los tirones.
+   ========================================================================== */
+
+/* ---- Revelado al hacer scroll -------------------------------------------
+   El elemento parte oculto y `main.js` le añade `.es-visible` cuando entra en
+   pantalla. Si JavaScript no carga, la clase `js-activo` nunca se aplica al
+   <html> y el contenido se ve normal: la animación es una mejora, no un
+   requisito para leer la página.                                          */
+.js-activo [data-revelar] {
+  opacity: 0;
+  /* `translate3d` en vez de `translateY`: activa la aceleración por hardware
+     en algunos navegadores, que delegan el movimiento a la tarjeta gráfica. */
+  transform: translate3d(0, 1.75rem, 0);
+  /* El desenfoque de entrada es lo que da la sensación de "aparecer desde
+     el fondo" en lugar de un simple deslizamiento. */
+  filter: blur(6px);
+  transition:
+    opacity var(--transicion-lenta),
+    transform var(--transicion-lenta),
+    filter var(--transicion-lenta);
+  /* Escalonado: cada elemento entra 90 ms después del anterior. */
+  transition-delay: calc(var(--retardo, 0) * 90ms);
+  will-change: opacity, transform;
+}
+
+.js-activo [data-revelar].es-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  filter: blur(0);
+}
+
+/* ---- Fotogramas reutilizables ------------------------------------------- */
+@keyframes aparecer-suave {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes aparecer-escala {
+  from {
+    opacity: 0;
+    transform: translateY(1rem) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes flotar {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -1.25rem, 0) scale(1.03);
+  }
+}
+
+@keyframes latido-anillo {
+  0% {
+    transform: scale(0.94);
+    opacity: 0.55;
+  }
+  70% {
+    transform: scale(1.06);
+    opacity: 0.14;
+  }
+  100% {
+    transform: scale(0.94);
+    opacity: 0.55;
+  }
+}
+
+@keyframes descender {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  45% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  55% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes puntos-escribiendo {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.35;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+/* ---- Preferencia de movimiento reducido ---------------------------------
+   Se anula el desplazamiento y el desenfoque, pero se conserva la opacidad
+   final para que nada quede invisible.                                    */
+@media (prefers-reduced-motion: reduce) {
+  .js-activo [data-revelar] {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}

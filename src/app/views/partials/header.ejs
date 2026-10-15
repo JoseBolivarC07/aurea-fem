@@ -1,0 +1,81 @@
+<%#
+  ══════════════════════════════════════════════════════════════════════════
+  PARCIAL: CABECERA
+  ══════════════════════════════════════════════════════════════════════════
+
+  Se incluye en todas las páginas desde `layouts/main.ejs`.
+
+  Un PARCIAL es un trozo de plantilla reutilizable. Se escribe una vez y se
+  incrusta donde haga falta con `include`, en lugar de copiarlo en cada vista.
+
+  Tres bloques: la marca (logo + nombre), la navegación y el botón de menú
+  que solo se ve en pantallas pequeñas.
+
+  Los atributos `data-*` son los enganches del JavaScript (`core/nav.js`). Se
+  usan en vez de las clases CSS para que rediseñar no rompa la funcionalidad.
+#%>
+<header class="cabecera" data-cabecera>
+  <div class="contenedor cabecera__interior">
+
+    <%# ── BLOQUE 1: Marca ─────────────────────────────────────────────────
+        El emblema lleva `alt=""` a propósito: es decorativo y el nombre ya
+        se lee justo al lado. Con un texto alternativo, un lector de pantalla
+        diría la marca dos veces seguidas. %>
+    <a class="cabecera__marca" href="/" aria-label="<%= brand.name %>, ir al inicio">
+      <img class="cabecera__emblema" src="/images/logo-emblema.svg" alt="" width="40" height="40">
+      <span class="cabecera__texto">
+        <span class="cabecera__nombre"><%= brand.name %></span>
+        <span class="cabecera__eslogan"><%= brand.slogan %></span>
+      </span>
+    </a>
+
+    <%# ── BLOQUE 2: Navegación ────────────────────────────────────────────
+        Los enlaces NO están escritos a mano: se recorren desde el array
+        `navigation` de `site.model.js`. Agregar una página al menú es
+        agregar una línea en ese modelo.
+
+        `aria-label` distingue este <nav> del que hay en el pie, para que un
+        lector de pantalla pueda diferenciarlos. %>
+    <nav class="cabecera__nav" id="menu-principal" aria-label="Navegación principal">
+      <ul class="cabecera__lista">
+        <% navigation.forEach(function (enlace) {
+             /* ¿Es esta la página actual? Se calcula distinto según el caso:
+                · Inicio ('/') exige coincidencia exacta, porque `startsWith`
+                  daría verdadero para TODAS las rutas.
+                · Las demás usan `startsWith` para que /servicios#embarazo
+                  también marque "Servicios" como activo. */
+             const activo = enlace.path === '/'
+               ? currentPath === '/'
+               : currentPath.startsWith(enlace.path); %>
+        <li>
+          <a class="cabecera__enlace<%= activo ? ' es-activo' : '' %>"
+             href="<%= enlace.path %>"
+             <%= activo ? 'aria-current="page"' : '' %>><%= enlace.label %></a>
+        </li>
+        <% }); %>
+      </ul>
+
+      <a class="boton boton--primario boton--compacto cabecera__cta" href="/contacto">
+        Escríbenos
+      </a>
+    </nav>
+
+    <%# ── BLOQUE 3: Botón del menú móvil ──────────────────────────────────
+        Oculto en escritorio por CSS. Contiene los dos iconos (hamburguesa y
+        equis) superpuestos; el CSS decide cuál se ve según `aria-expanded`.
+
+        Atributos de accesibilidad:
+          aria-expanded → si el menú está abierto (lo actualiza nav.js)
+          aria-controls → qué elemento controla este botón
+          aria-label    → qué hace, ya que solo muestra un icono %>
+    <button class="cabecera__hamburguesa" type="button"
+            data-menu-toggle
+            aria-expanded="false"
+            aria-controls="menu-principal"
+            aria-label="Abrir menú de navegación">
+      <svg class="icono" aria-hidden="true"><use href="#i-menu"></use></svg>
+      <svg class="icono icono--cerrar" aria-hidden="true"><use href="#i-cerrar"></use></svg>
+    </button>
+
+  </div>
+</header>

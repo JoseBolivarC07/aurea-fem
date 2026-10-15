@@ -1,0 +1,39 @@
+name: Imagen Docker
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  IMAGEN: ghcr.io/josebolivarc07/aurea-fem
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGEN }}:latest
+            ${{ env.IMAGEN }}:${{ github.sha }}
+          labels: org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+      - name: Prueba de arranque
+        run: |
+          docker run -d --name aurea -p 3000:3000 ${{ env.IMAGEN }}:latest
+          for i in $(seq 1 15); do curl -fsS http://localhost:3000/ > /dev/null && exit 0; sleep 1; done
+          docker logs aurea
+          exit 1

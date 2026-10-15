@@ -1,0 +1,173 @@
+/* ==========================================================================
+   Tipografía
+   Montserrat es la fuente corporativa y sostiene toda la interfaz.
+   La serif se reserva para los títulos de gran tamaño: es el mismo registro
+   del logotipo y le da a la página el aire editorial que la marca busca.
+   Para volver a Montserrat en todo, basta cambiar --fuente-display.
+   ========================================================================== */
+
+body {
+  font-family: var(--fuente-base);
+  font-size: var(--texto-base);
+  font-weight: 400;
+  color: var(--color-tinta);
+  background-color: var(--color-fondo);
+}
+
+/* ---- Etiqueta de sección: el "antetítulo" en versalitas ----------------- */
+.etiqueta-seccion {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  font-size: var(--texto-xs);
+  font-weight: 500;
+  letter-spacing: var(--interletra-amplia);
+  text-transform: uppercase;
+  color: var(--color-primario);
+}
+
+.etiqueta-seccion::before {
+  content: '';
+  width: 2rem;
+  height: 1px;
+  background-color: currentColor;
+  opacity: 0.5;
+}
+
+.etiqueta-seccion--clara {
+  color: var(--marca-rosa);
+}
+
+/* ---- Títulos ------------------------------------------------------------ */
+.titulo-seccion {
+  font-family: var(--fuente-display);
+  font-size: var(--display-md);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  color: var(--color-primario-oscuro);
+  max-width: 20ch;
+}
+
+.encabezado-seccion {
+  margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+.encabezado-seccion--dividido {
+  gap: var(--espacio-8);
+}
+
+.encabezado-seccion__apoyo {
+  color: var(--color-tinta-media);
+  font-size: var(--texto-lg);
+  max-width: 42ch;
+}
+
+@media (min-width: 60rem) {
+  .encabezado-seccion--dividido {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .encabezado-seccion--dividido > div {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-4);
+  }
+}
+
+/* ---- Enlace con subrayado animado -------------------------------------- */
+.enlace-subrayado {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  font-size: var(--texto-md);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--color-primario);
+  padding-bottom: 2px;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 100% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: color var(--transicion), background-size var(--transicion);
+}
+
+.enlace-subrayado .icono {
+  transition: transform var(--transicion);
+}
+
+.enlace-subrayado:hover {
+  color: var(--color-primario-oscuro);
+}
+
+.enlace-subrayado:hover .icono {
+  transform: translateX(4px);
+}
+
+/* ---- Iconografía -------------------------------------------------------- */
+.icono {
+  width: 1.25em;
+  height: 1.25em;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+}
+
+.sprite-iconos {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* ---- Marcas de etapa (píldoras informativas) ---------------------------- */
+.marca-etapa {
+  display: inline-block;
+  padding: 0.25rem 0.7rem;
+  font-size: var(--texto-xs);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--color-primario);
+  background-color: rgba(145, 13, 43, 0.07);
+  border-radius: var(--radio-completo);
+}
+
+/* ---- Avisos ------------------------------------------------------------- */
+.alerta {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--espacio-3);
+  padding: var(--espacio-4) var(--espacio-5);
+  margin-bottom: var(--espacio-6);
+  border-radius: var(--radio-md);
+  font-size: var(--texto-md);
+  line-height: 1.55;
+  border-left: 3px solid;
+  animation: aparecer-suave 480ms var(--curva-salida) both;
+}
+
+.alerta .icono {
+  margin-top: 0.15em;
+}
+
+.alerta--exito {
+  color: #12432f;
+  background-color: rgba(31, 107, 74, 0.08);
+  border-color: var(--color-exito);
+}
+
+.alerta--error {
+  color: var(--color-error);
+  background-color: rgba(160, 21, 48, 0.07);
+  border-color: var(--color-error);
+}
+
+.alerta--aviso {
+  color: var(--color-tinta-media);
+  background-color: rgba(226, 213, 202, 0.5);
+  border-color: var(--marca-arena);
+}

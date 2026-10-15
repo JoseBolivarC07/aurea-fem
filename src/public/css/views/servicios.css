@@ -1,0 +1,294 @@
+/* ==========================================================================
+   Vista: Servicios
+   ========================================================================== */
+
+/* ---- Listado de servicios ------------------------------------------------ */
+.servicio {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: var(--espacio-5) var(--espacio-6);
+  align-items: start;
+  padding-block: clamp(2rem, 4vw, 3.25rem);
+  border-bottom: 1px solid var(--color-borde-suave);
+}
+
+.servicio:first-child {
+  border-top: 1px solid var(--color-borde-suave);
+}
+
+.servicio__indice {
+  font-family: var(--fuente-display);
+  font-size: 1.125rem;
+  color: var(--color-suave);
+  padding-top: 0.6rem;
+}
+
+.servicio__marca {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  color: var(--color-primario);
+  background-color: rgba(145, 13, 43, 0.06);
+  border-radius: var(--radio-md);
+  transition: background-color var(--transicion), color var(--transicion), transform var(--transicion);
+}
+
+.servicio:hover .servicio__marca {
+  background-color: var(--color-primario);
+  color: #fff;
+  transform: rotate(-6deg);
+}
+
+.servicio__marca .icono {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.servicio__cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+  max-width: 62ch;
+}
+
+.servicio__titulo {
+  font-family: var(--fuente-display);
+  font-size: clamp(1.6rem, 1.2rem + 1.5vw, 2.35rem);
+  color: var(--color-primario-oscuro);
+}
+
+.servicio__resumen {
+  font-size: var(--texto-lg);
+  color: var(--color-tinta);
+}
+
+.servicio__detalle {
+  font-size: var(--texto-md);
+  line-height: 1.7;
+  color: var(--color-tinta-media);
+}
+
+@media (max-width: 40rem) {
+  .servicio {
+    grid-template-columns: auto 1fr;
+  }
+
+  .servicio__cuerpo {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ---- Comparativa ---------------------------------------------------------
+   El fondo de la franja lo aporta `.seccion-alterna` (base/layout.css).    */
+.comparativa__tabla {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde-suave);
+  border-radius: var(--radio-lg);
+  overflow: hidden;
+}
+
+.comparativa__fila {
+  display: grid;
+  gap: var(--espacio-4);
+  padding: var(--espacio-5) clamp(1.25rem, 3vw, 2rem);
+  border-bottom: 1px solid var(--color-borde-suave);
+  transition: background-color var(--transicion);
+}
+
+.comparativa__fila:last-child {
+  border-bottom: none;
+}
+
+.comparativa__fila:not(.comparativa__fila--encabezado):hover {
+  background-color: var(--color-fondo);
+}
+
+@media (min-width: 48rem) {
+  .comparativa__fila {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--espacio-8);
+  }
+}
+
+.comparativa__fila--encabezado {
+  background-color: var(--color-superficie-calida);
+  font-size: var(--texto-xs);
+  font-weight: 600;
+  letter-spacing: var(--interletra-media);
+  text-transform: uppercase;
+  color: var(--color-primario-oscuro);
+}
+
+.comparativa__otros {
+  font-size: var(--texto-md);
+  color: var(--color-tinta-suave);
+  text-decoration: line-through;
+  text-decoration-color: rgba(145, 13, 43, 0.3);
+  text-decoration-thickness: 1px;
+}
+
+.comparativa__nosotras {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--espacio-3);
+  font-size: var(--texto-md);
+  font-weight: 500;
+  color: var(--color-tinta);
+}
+
+.comparativa__nosotras .icono {
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-top: 0.25em;
+  color: var(--color-primario);
+}
+
+/* ---- Panel de etapas con pestañas ---------------------------------------- */
+.etapas-detalle__panel {
+  display: grid;
+  gap: var(--espacio-8);
+}
+
+@media (min-width: 56rem) {
+  .etapas-detalle__panel {
+    grid-template-columns: 17rem 1fr;
+    gap: clamp(2rem, 4vw, 4rem);
+  }
+}
+
+.etapas-detalle__pestanas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+}
+
+.pestana {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-4);
+  padding: var(--espacio-4) var(--espacio-5);
+  text-align: left;
+  color: var(--color-tinta-media);
+  border-radius: var(--radio-md);
+  border-left: 2px solid transparent;
+  transition:
+    background-color var(--transicion),
+    color var(--transicion),
+    border-color var(--transicion);
+}
+
+.pestana:hover {
+  background-color: var(--color-superficie);
+  color: var(--color-primario);
+}
+
+.pestana.es-activa {
+  background-color: var(--color-superficie);
+  border-left-color: var(--color-primario);
+  color: var(--color-primario);
+  box-shadow: var(--sombra-sutil);
+}
+
+.pestana__orden {
+  font-family: var(--fuente-display);
+  font-size: 1.125rem;
+  color: var(--color-suave);
+  transition: color var(--transicion);
+}
+
+.pestana.es-activa .pestana__orden {
+  color: var(--color-primario);
+}
+
+.pestana__nombre {
+  font-size: var(--texto-md);
+  font-weight: 500;
+}
+
+@media (max-width: 56rem) {
+  .etapas-detalle__pestanas {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: var(--espacio-2);
+    scrollbar-width: none;
+  }
+
+  .etapas-detalle__pestanas::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pestana {
+    flex: none;
+    border-left: none;
+    border-bottom: 2px solid transparent;
+    border-radius: var(--radio-md) var(--radio-md) 0 0;
+  }
+
+  .pestana.es-activa {
+    border-left-color: transparent;
+    border-bottom-color: var(--color-primario);
+  }
+}
+
+/* ---- Contenido de cada etapa --------------------------------------------- */
+.panel-etapa {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+  padding: clamp(1.75rem, 4vw, 3rem);
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde-suave);
+  border-radius: var(--radio-lg);
+}
+
+.panel-etapa[hidden] {
+  display: none;
+}
+
+.panel-etapa.es-activo {
+  animation: aparecer-suave 420ms var(--curva-salida) both;
+}
+
+.panel-etapa__titulo {
+  font-family: var(--fuente-display);
+  font-size: clamp(1.85rem, 1.4rem + 1.8vw, 2.75rem);
+  color: var(--color-primario-oscuro);
+}
+
+.panel-etapa__resumen {
+  font-size: var(--texto-lg);
+  font-style: italic;
+  color: var(--color-acento);
+}
+
+.panel-etapa__texto {
+  font-size: var(--texto-md);
+  line-height: 1.75;
+  color: var(--color-tinta-media);
+}
+
+.panel-etapa__lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+  margin-top: var(--espacio-3);
+  padding-top: var(--espacio-5);
+  border-top: 1px solid var(--color-borde-suave);
+}
+
+.panel-etapa__lista li {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  font-size: var(--texto-md);
+  color: var(--color-tinta);
+}
+
+.panel-etapa__lista .icono {
+  width: 1rem;
+  height: 1rem;
+  color: var(--color-primario);
+}

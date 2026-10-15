@@ -1,0 +1,65 @@
+/* ==========================================================================
+   Vista: Páginas de error (404 y 500)
+   ========================================================================== */
+
+.pagina-error {
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  padding-block: 8rem 4rem !important;
+  background:
+    radial-gradient(55% 50% at 50% 5%, rgba(238, 173, 174, 0.28), transparent 70%),
+    var(--color-fondo);
+}
+
+.pagina-error__interior {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espacio-4);
+  text-align: center;
+  max-width: 40rem;
+  animation: aparecer-suave 560ms var(--curva-salida) both;
+}
+
+.pagina-error__codigo {
+  font-family: var(--fuente-display);
+  font-size: clamp(5rem, 3rem + 10vw, 11rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--marca-rosa);
+}
+
+.pagina-error__titulo {
+  font-family: var(--fuente-display);
+  font-size: var(--display-sm);
+  color: var(--color-primario-oscuro);
+}
+
+.pagina-error__texto {
+  font-size: var(--texto-lg);
+  color: var(--color-tinta-media);
+  max-width: 46ch;
+}
+
+.pagina-error__detalle {
+  width: 100%;
+  margin-top: var(--espacio-4);
+  padding: var(--espacio-4);
+  font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+  font-size: var(--texto-sm);
+  text-align: left;
+  color: var(--color-error);
+  background-color: rgba(160, 21, 48, 0.06);
+  border-radius: var(--radio-md);
+  overflow-x: auto;
+}
+
+.pagina-error__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--espacio-3);
+  margin-top: var(--espacio-5);
+}
