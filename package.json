@@ -13,6 +13,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "node --watch app.js",
+    "test": "node --test",
     "build:static": "node scripts/build-static.js"
   },
   "dependencies": {
