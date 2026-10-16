@@ -18,6 +18,7 @@
 import { iniciarRevelado } from './reveal.js'; //        Animaciones al hacer scroll
 import { iniciarNavegacion } from './nav.js'; //         Cabecera y menú móvil
 import { iniciarChat } from '../components/chat.js'; //  Widget de Aura
+import { iniciarCarrito } from '../components/carrito.js'; // Bolsa y pedido por WhatsApp
 
 /**
  * Arranca los tres módulos.
@@ -30,6 +31,7 @@ function iniciar() {
   iniciarNavegacion();
   iniciarRevelado();
   iniciarChat();
+  iniciarCarrito();
 }
 
 // Los módulos ya se ejecutan con el DOM listo, pero se comprueba igual: si
