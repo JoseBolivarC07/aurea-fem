@@ -240,7 +240,11 @@ export function iniciarCarrito() {
 
     // Si el elemento enfocado desapareció (se quitó la última línea, se vació
     // el pedido), el foco caería a <body> y Tab saldría del panel.
-    if (estaAbierto() && !panel.contains(document.activeElement)) botonCerrar.focus();
+    // Chrome sigue marcando como activo un botón que acaba de quedar dentro de
+    // un `[hidden]`, así que también se cuenta como perdido.
+    const activo = document.activeElement;
+    const perdido = !panel.contains(activo) || activo.closest('[hidden]');
+    if (estaAbierto() && perdido) botonCerrar.focus();
   }
 
   function cambiar(nuevo) {
