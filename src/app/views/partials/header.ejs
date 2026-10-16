@@ -60,6 +60,16 @@
       </a>
     </nav>
 
+    <%# ── Bolsa del pedido ────────────────────────────────────────────────
+        Abre el panel del carrito (`partials/carrito.ejs`). El contador y la
+        etiqueta accesible los actualiza `core/carrito.js`. %>
+    <button class="bolsa" type="button" data-carrito-abrir
+            aria-controls="panel-carrito" aria-expanded="false"
+            aria-label="Ver tu pedido (vacío)">
+      <svg class="icono" aria-hidden="true"><use href="#i-bolsa"></use></svg>
+      <span class="bolsa__contador" data-carrito-contador hidden>0</span>
+    </button>
+
     <%# ── BLOQUE 3: Botón del menú móvil ──────────────────────────────────
         Oculto en escritorio por CSS. Contiene los dos iconos (hamburguesa y
         equis) superpuestos; el CSS decide cuál se ve según `aria-expanded`.

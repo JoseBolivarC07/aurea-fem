@@ -214,6 +214,8 @@
           <h3 class="tarjeta-producto__titulo"><%= producto.nombre %></h3>
           <p class="tarjeta-producto__texto"><%= producto.resumen %></p>
           <p class="tarjeta-producto__precio"><%= producto.precioFormateado %></p>
+          <button class="boton boton--primario boton--compacto tarjeta-producto__agregar" type="button"
+                  data-agregar="<%= producto.id %>">Agregar</button>
         </div>
       </article>
       <% }); %>

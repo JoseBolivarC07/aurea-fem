@@ -34,6 +34,7 @@ const brand = {
   email: 'Aureafem@15gmail.com',
   phone: '3137156356',
   phoneDisplay: '+57 313 715 6356',
+  whatsapp: '573137156356', // Con indicativo de país, formato de wa.me
   instagram: 'aurea_fem5',
   instagramUrl: 'https://instagram.com/aurea_fem5',
   domain: 'aureafem.com',

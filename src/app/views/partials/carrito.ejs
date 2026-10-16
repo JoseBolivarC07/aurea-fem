@@ -1,0 +1,48 @@
+<%#
+  ══════════════════════════════════════════════════════════════════════════
+  PARCIAL: CARRITO (PANEL DE PEDIDO)
+  ══════════════════════════════════════════════════════════════════════════
+
+  Se incluye desde `layouts/main.ejs`. Está inerte (`hidden`) hasta que
+  `core/carrito.js` lo abre; los `data-*` son sus enganches.
+
+  Tres piezas: el panel con el pedido, la barra fija del móvil y un aviso
+  `aria-live` que anuncia a los lectores de pantalla cuando cambia el pedido.
+#%>
+<div class="carrito" data-carrito data-whatsapp="<%= brand.whatsapp %>" hidden>
+  <div class="carrito__fondo" data-carrito-cerrar></div>
+
+  <section class="carrito__panel" id="panel-carrito" role="dialog" aria-modal="true" aria-labelledby="carrito-titulo">
+    <header class="carrito__cabecera">
+      <h2 id="carrito-titulo">Tu pedido</h2>
+      <button class="carrito__cerrar" type="button" data-carrito-cerrar aria-label="Cerrar el pedido">
+        <svg class="icono" aria-hidden="true"><use href="#i-cerrar"></use></svg>
+      </button>
+    </header>
+
+    <ul class="carrito__lista" data-carrito-lista></ul>
+
+    <div class="carrito__vacio" data-carrito-vacio hidden>
+      <p>Tu pedido está vacío</p>
+      <a href="/productos">Ver productos</a>
+    </div>
+
+    <footer class="carrito__pie" data-carrito-pie>
+      <p class="carrito__total">Total <span data-carrito-total></span></p>
+      <a class="boton boton--primario boton--ancho carrito__whatsapp" data-carrito-enviar href="#" rel="noopener">
+        <svg class="icono" aria-hidden="true"><use href="#i-whatsapp"></use></svg>
+        Enviar pedido por WhatsApp
+      </a>
+      <button class="carrito__vaciar" type="button" data-carrito-vaciar>Vaciar pedido</button>
+    </footer>
+  </section>
+</div>
+
+<button class="barra-pedido" type="button" data-carrito-barra data-carrito-abrir
+        aria-controls="panel-carrito" aria-expanded="false" hidden>
+  <svg class="icono" aria-hidden="true"><use href="#i-bolsa"></use></svg>
+  <span data-carrito-resumen></span>
+  <span class="barra-pedido__accion">Ver pedido</span>
+</button>
+
+<p class="visualmente-oculto" data-carrito-aviso aria-live="polite"></p>

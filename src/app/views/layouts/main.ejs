@@ -126,6 +126,14 @@
       error lo desactivan pasando `showChat: false` desde su controlador. %>
   <% if (showChat) { %><%- include('../partials/chat-widget') %><% } %>
 
+  <%# ── Carrito ───────────────────────────────────────────────────────────
+      El catálogo viaja en un bloque JSON, no en un script ejecutable: la CSP
+      (`script-src 'self'`) lo permite porque el navegador no lo ejecuta.
+      `catalogoPedido` ya sale escapado de `jsonParaHtml`, por eso se imprime
+      sin escapar. %>
+  <script type="application/json" id="catalogo-pedido"><%- catalogoPedido %></script>
+  <%- include('../partials/carrito') %>
+
   <%# ── Scripts ───────────────────────────────────────────────────────────
       Mismo mecanismo que las hojas de estilo: base + lo propio de la vista.
 

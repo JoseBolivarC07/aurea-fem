@@ -16,6 +16,14 @@
  */
 
 const { brand, navigation } = require('../app/models/site.model');
+const { listar } = require('../app/models/producto.model');
+const { jsonParaHtml } = require('../utils/json-html');
+
+// El catálogo es fijo mientras el servidor corre: se serializa una sola vez
+// y no en cada petición. Solo lleva lo que el carrito necesita en el navegador.
+const catalogoPedido = jsonParaHtml(
+  listar().map(({ id, nombre, precio, imagen }) => ({ id, nombre, precio, imagen }))
+);
 
 module.exports = function locals(req, res, next) {
   // ── BLOQUE 1: Datos fijos de la marca ─────────────────────────────────────
@@ -23,6 +31,7 @@ module.exports = function locals(req, res, next) {
   // un solo archivo y se actualiza en toda la web.
   res.locals.brand = brand; //           Nombre, eslogan, correo, redes...
   res.locals.navigation = navigation; // Enlaces del menú principal
+  res.locals.catalogoPedido = catalogoPedido; // JSON del carrito (ya escapado)
 
   // ── BLOQUE 2: Datos que dependen de la petición ───────────────────────────
   // `currentPath` lo usa la cabecera para marcar en qué página estamos

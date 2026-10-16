@@ -48,6 +48,8 @@
 
         <footer class="producto__pie">
           <span class="producto__precio"><%= producto.precioFormateado %></span>
+          <button class="boton boton--primario boton--compacto producto__agregar" type="button"
+                  data-agregar="<%= producto.id %>">Agregar</button>
           <button class="boton boton--contorno boton--compacto" type="button"
                   data-consultar-producto="<%= producto.nombre %>">
             Consultar
