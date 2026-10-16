@@ -32,6 +32,15 @@
   flex-direction: column;
   align-items: flex-end;
   gap: var(--espacio-3);
+
+  /* El contenedor puede ser más ancho que sus hijos (móvil): que no capture
+     toques. Solo el lanzador y el panel responden. */
+  pointer-events: none;
+}
+
+.chat__lanzador,
+.chat__panel {
+  pointer-events: auto;
 }
 
 /* ---- Lanzador ----------------------------------------------------------- */
@@ -73,9 +82,12 @@
 }
 
 .chat.es-abierto .chat__lanzador {
-  opacity: 0;
-  transform: scale(0.9);
-  pointer-events: none;
+  display: none;
+}
+
+/* El menú móvil abierto cubre la pantalla: el chat no debe asomar encima. */
+html.menu-abierto .chat {
+  display: none;
 }
 
 /* ---- Panel -------------------------------------------------------------- */
@@ -322,7 +334,8 @@
   flex: 1;
   max-height: 7rem;
   padding: var(--espacio-3) var(--espacio-4);
-  font-size: var(--texto-md);
+  /* 16 px mínimo: por debajo, iOS hace zoom al enfocar el campo. */
+  font-size: 1rem;
   line-height: 1.5;
   color: var(--color-tinta);
   background-color: var(--color-fondo);
@@ -393,7 +406,10 @@
   .chat__lanzador {
     align-self: flex-end;
   }
+}
 
+/* ---- Tableta y móvil: lanzador redondo, solo con icono -------------------- */
+@media (max-width: 48rem) {
   .chat__lanzador-texto {
     display: none;
   }

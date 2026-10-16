@@ -10,18 +10,34 @@
   inset-inline: 0;
   z-index: var(--capa-cabecera);
   transition:
-    background-color var(--transicion),
     box-shadow var(--transicion),
     border-color var(--transicion);
   border-bottom: 1px solid transparent;
 }
 
 .cabecera.es-desplazada {
+  border-bottom-color: var(--color-borde-suave);
+  box-shadow: var(--sombra-sutil);
+}
+
+/* El fondo translúcido vive en un pseudoelemento: un `backdrop-filter` en la
+   propia cabecera la haría bloque contenedor del menú móvil (`position: fixed`)
+   y el menú abierto solo mediría lo que ella. */
+.cabecera::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background-color: rgba(251, 248, 246, 0.82);
   backdrop-filter: saturate(180%) blur(14px);
   -webkit-backdrop-filter: saturate(180%) blur(14px);
-  border-bottom-color: var(--color-borde-suave);
-  box-shadow: var(--sombra-sutil);
+  opacity: 0;
+  transition: opacity var(--transicion);
+  pointer-events: none;
+}
+
+.cabecera.es-desplazada::before {
+  opacity: 1;
 }
 
 .cabecera__interior {

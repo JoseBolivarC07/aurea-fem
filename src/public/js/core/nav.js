@@ -85,6 +85,10 @@ function iniciarMenu() {
     boton.setAttribute('aria-label', abierto ? 'Cerrar menú de navegación' : 'Abrir menú de navegación');
     menu.classList.toggle('es-abierto', abierto);
 
+    // Marca en <html> que el menú cubre la pantalla; el CSS la usa para
+    // esconder el chat flotante.
+    document.documentElement.classList.toggle('menu-abierto', abierto);
+
     // Bloquea el scroll del fondo mientras el menú cubre la pantalla: sin
     // esto, al deslizar sobre el menú se movería la página de atrás.
     document.body.style.overflow = abierto ? 'hidden' : '';

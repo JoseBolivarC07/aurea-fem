@@ -9,6 +9,13 @@
   font-size: var(--texto-md);
 }
 
+/* Deja libre el rincón donde flota el botón de Aura. */
+@media (max-width: 48rem) {
+  .pie {
+    padding-bottom: calc(var(--espacio-8) + 4.5rem);
+  }
+}
+
 .pie__superior {
   display: grid;
   gap: clamp(2.5rem, 5vw, 4rem);
