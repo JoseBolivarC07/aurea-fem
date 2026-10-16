@@ -28,15 +28,15 @@
 const OPCIONES = {
   /**
    * `rootMargin` encoge o agranda la zona de detección.
-   * El -12% inferior hace que la animación se dispare un poco ANTES de que
-   * el elemento toque el borde de la pantalla, así termina justo cuando
-   * queda a la vista en lugar de empezar cuando ya se está leyendo.
+   * El -5% inferior hace que la animación se dispare un poco ANTES de que
+   * el elemento toque el borde de la pantalla. Con un margen mayor, en un
+   * móvil los bloques del pie de la pantalla tardaban en aparecer.
    */
-  rootMargin: '0px 0px -12% 0px',
+  rootMargin: '0px 0px -5% 0px',
 
-  // Basta con que asome un 8% del elemento para considerarlo visible. Con un
-  // umbral mayor, los bloques altos tardarían demasiado en aparecer.
-  threshold: 0.08,
+  // Con 0 basta con que asome un píxel: los bloques muy altos (con un umbral
+  // por porcentaje) nunca llegarían a cumplirlo en una pantalla pequeña.
+  threshold: 0,
 };
 
 // ── BLOQUE 2: Puesta en marcha ──────────────────────────────────────────────

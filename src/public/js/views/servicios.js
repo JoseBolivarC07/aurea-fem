@@ -112,6 +112,11 @@ function iniciarPestanas() {
   // escribir cualquier cosa en la barra de direcciones.
   if (ancla && pestanas.some((pestana) => pestana.dataset.pestana === ancla)) {
     activar(ancla);
+
+    // El navegador no sabe llevar al ancla (el id es de la pestaña, y el panel
+    // cambia de alto al activarse): se lleva la lista de pestañas al borde
+    // superior. Su `scroll-margin-top` la deja bajo la cabecera fija.
+    navegacion.scrollIntoView({ block: 'start' });
   } else {
     activar(pestanas[0].dataset.pestana); // Por defecto, la primera
   }

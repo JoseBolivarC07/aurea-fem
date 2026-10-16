@@ -137,7 +137,7 @@
 
 /* ---- Tamaños ------------------------------------------------------------ */
 .boton--compacto {
-  --boton-alto: 2.5rem;
+  --boton-alto: 2.75rem; /* 44 px: área táctil mínima */
   padding-inline: var(--espacio-5);
   font-size: var(--texto-sm);
 }

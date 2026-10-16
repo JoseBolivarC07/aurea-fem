@@ -68,6 +68,11 @@
 }
 
 .contacto__valor {
+  /* Área táctil de 44 px. Se centra con relleno y no con flex porque la
+     dirección lleva un <br> que un contenedor flex ignoraría. */
+  display: inline-block;
+  min-height: 44px;
+  padding-block: 0.6rem;
   font-size: var(--texto-md);
   color: var(--color-tinta);
   transition: color var(--transicion);
@@ -96,6 +101,11 @@ a.contacto__valor:hover {
   font-size: var(--texto-md);
   line-height: 1.7;
   color: var(--color-tinta-media);
+}
+
+/* Los números son enlaces de llamada: se ven igual que el texto en negrita. */
+.contacto__urgencia a {
+  color: var(--color-primario);
 }
 
 .contacto__urgencia strong {

@@ -146,7 +146,7 @@ html.menu-abierto .chat {
 }
 
 .chat__estado {
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   letter-spacing: 0.06em;
   color: rgba(247, 236, 236, 0.75);
 }
@@ -158,8 +158,8 @@ html.menu-abierto .chat {
 .chat__cerrar {
   display: grid;
   place-items: center;
-  width: 2rem;
-  height: 2rem;
+  width: 2.75rem;
+  height: 2.75rem;
   color: rgba(255, 255, 255, 0.8);
   border-radius: var(--radio-completo);
   transition: background-color var(--transicion), color var(--transicion);
@@ -383,7 +383,7 @@ html.menu-abierto .chat {
 
 .chat__nota {
   padding: 0 var(--espacio-5) var(--espacio-4);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   line-height: 1.45;
   color: var(--color-tinta-suave);
   background-color: var(--color-superficie);

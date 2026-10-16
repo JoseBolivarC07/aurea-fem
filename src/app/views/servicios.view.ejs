@@ -62,8 +62,8 @@
 
       <% diferenciadores.forEach(function (item, indice) { %>
       <div class="comparativa__fila" role="row" data-revelar style="--retardo: <%= indice %>">
-        <span class="comparativa__otros" role="cell"><%= item.otros %></span>
-        <span class="comparativa__nosotras" role="cell">
+        <span class="comparativa__otros" role="cell" data-etiqueta="El resto del sector"><%= item.otros %></span>
+        <span class="comparativa__nosotras" role="cell" data-etiqueta="Áurea Fem">
           <svg class="icono" aria-hidden="true"><use href="#i-check"></use></svg>
           <%= item.nosotras %>
         </span>

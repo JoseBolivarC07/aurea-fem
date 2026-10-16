@@ -96,7 +96,7 @@
   --espacio-16: 4rem;
   --espacio-20: 5rem;
 
-  --seccion-y: clamp(4.5rem, 3rem + 6vw, 9rem);
+  --seccion-y: clamp(3rem, 3rem + 6vw, 9rem);
   --contenedor-max: 76rem;
   --contenedor-estrecho: 46rem;
   --contenedor-padding: clamp(1.25rem, 4vw, 2.5rem);

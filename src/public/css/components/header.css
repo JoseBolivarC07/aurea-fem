@@ -259,7 +259,9 @@
   }
 }
 
-@media (max-width: 26rem) {
+/* El eslogan de 9 px no es legible en móvil: se oculta hasta que cabe a un
+   tamaño razonable en la cabecera de escritorio. */
+@media (max-width: 47.99rem) {
   .cabecera__eslogan {
     display: none;
   }

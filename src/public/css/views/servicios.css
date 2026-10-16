@@ -146,6 +146,42 @@
   color: var(--color-primario);
 }
 
+/* En móvil la fila de encabezado se oculta y cada celda lleva su propia
+   etiqueta (`data-etiqueta`), así no hace falta alinear dos columnas.
+   Va después de las reglas base para ganarles por orden. */
+@media (max-width: 47.99rem) {
+  .comparativa__fila--encabezado {
+    display: none;
+  }
+
+  /* Cuadrícula para que la etiqueta ocupe una línea y el icono quede junto
+     al texto en la siguiente. */
+  .comparativa__nosotras {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: var(--espacio-3);
+  }
+
+  .comparativa__nosotras::before {
+    grid-column: 1 / -1;
+  }
+
+  .comparativa__otros::before,
+  .comparativa__nosotras::before {
+    content: attr(data-etiqueta);
+    /* inline-block y no block: el tachado de `.comparativa__otros` se
+       propaga a los bloques hijos pero no a los inline-block. */
+    display: inline-block;
+    width: 100%;
+    margin-bottom: var(--espacio-1);
+    font-size: var(--texto-xs);
+    font-weight: 600;
+    letter-spacing: var(--interletra-media);
+    text-transform: uppercase;
+    color: var(--color-primario-oscuro);
+  }
+}
+
 /* ---- Panel de etapas con pestañas ---------------------------------------- */
 .etapas-detalle__panel {
   display: grid;
@@ -163,6 +199,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--espacio-1);
+  /* Al llegar por ancla, la lista queda debajo de la cabecera fija. */
+  scroll-margin-top: 6rem;
 }
 
 .pestana {
