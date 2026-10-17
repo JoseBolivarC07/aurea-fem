@@ -52,6 +52,8 @@ function adaptarHtml(html) {
       `method="post" action="mailto:${brand.email}" enctype="text/plain"`
     )
     .replace(/<a class="pie__acceso"[^>]*>[^<]*<\/a>/, '')
+    // El bloque JSON del catálogo del pedido guarda las fotos como "/images/…".
+    .replace(/"imagen":"\//g, `"imagen":"${BASE}/`)
     .replace(/\b(href|src|action)="(\/(?!\/)[^"]*)"/g, (_, atributo, url) => `${atributo}="${rutaPublica(url)}"`);
 }
 
@@ -94,6 +96,11 @@ async function main() {
 
   const contacto = fs.readFileSync(path.join(OUT, 'contacto', 'index.html'), 'utf8');
   if (!contacto.includes('action="mailto:')) throw new Error('No se pudo adaptar el formulario de contacto');
+
+  // Sin el catálogo o con fotos sin base, el pedido por WhatsApp se rompería en Pages.
+  const inicio = fs.readFileSync(path.join(OUT, 'index.html'), 'utf8');
+  if (!inicio.includes('id="catalogo-pedido"')) throw new Error('Falta el bloque #catalogo-pedido en dist/index.html');
+  if (inicio.includes('"imagen":"/images')) throw new Error('El catálogo del pedido conserva rutas de imagen sin base');
 
   console.log(`\n  Sitio estático listo en dist/ (base ${BASE}/)`);
 }
