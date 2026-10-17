@@ -397,7 +397,7 @@ export function iniciarChat() {
    *        (la usa el botón "Consultar" del catálogo).
    */
   function abrir(mensajeInicial) {
-    raiz.classList.add('es-abierto'); // Oculta el lanzador con una transición
+    raiz.classList.add('es-abierto'); // El CSS oculta el lanzador (display: none) mientras el chat está abierto
     panel.hidden = false;
     botonAbrir.setAttribute('aria-expanded', 'true'); // Para lectores de pantalla
 

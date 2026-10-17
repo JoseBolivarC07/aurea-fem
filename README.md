@@ -56,7 +56,8 @@ GitHub Pages solo sirve archivos estáticos, así que el workflow
 `.github/workflows/pages.yml` ejecuta `npm run build:static`, que genera el HTML
 de cada página en `dist/`. En esa versión el chat de Aura aparece como no
 disponible, el formulario de contacto abre el correo de la visitante y el
-acceso interno no existe. Para tener todo funcionando hay que usar la versión
+acceso interno no existe. El carrito y el pedido por WhatsApp sí funcionan,
+porque corren solo en el navegador. Para tener todo funcionando hay que usar la versión
 con Node o con Docker.
 
 ---
@@ -86,7 +87,8 @@ con Node o con Docker.
     │
     ├── utils/
     │   ├── validacion.js     Saneamiento y validación de entradas
-    │   └── sesion.js         Sesión por cookie firmada (HMAC)
+    │   ├── sesion.js         Sesión por cookie firmada (HMAC)
+    │   └── json-html.js      Catálogo del pedido incrustado en el HTML (JSON seguro)
     │
     ├── app/                  ── Módulo del sitio público ──
     │   ├── controllers/      Uno por vista
@@ -94,6 +96,7 @@ con Node o con Docker.
     │   ├── routes/           web.routes.js · chat.routes.js
     │   ├── services/         gemini.service.js · prompt.service.js
     │   └── views/            Plantillas EJS + layout + parciales
+    │                         (partials/carrito.ejs: panel del pedido)
     │
     ├── auth/                 ── Módulo de acceso interno ──
     │   ├── controllers/
@@ -105,14 +108,18 @@ con Node o con Docker.
     └── public/               ── Archivos servidos al navegador ──
         ├── css/
         │   ├── base/         reset · tokens · typography · layout · animations
-        │   ├── components/   button · header · footer · chat · form · page-header
+        │   ├── components/   button · header · footer · chat · form · page-header · carrito
         │   └── views/        home · nosotras · servicios · productos · contacto · acceso · error
         ├── js/
         │   ├── core/         main · nav · reveal · no-fouc
-        │   ├── components/   chat.js
+        │   ├── components/   chat.js · carrito.js (pantalla) · carrito-logica.js (cálculos puros)
         │   └── views/        home · servicios · productos · contacto
         └── images/           Logotipo, emblema y favicon en SVG
+
+test/                         Pruebas (`npm test`): lógica del carrito y páginas
 ```
+
+Para correr las pruebas: `npm test`.
 
 ### Una hoja de estilos por vista
 
