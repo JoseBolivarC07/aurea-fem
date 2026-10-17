@@ -124,4 +124,10 @@
   --capa-cabecera: 100;
   --capa-menu: 110;
   --capa-chat: 120;
+  --capa-carrito: 130; /* El panel del pedido tapa también al chat        */
+
+  /* ---- Barra del pedido (móvil) ---------------------------------------
+     Alto visible de la barra fija, sin la zona segura del iPhone. Lo usan
+     el carrito, el chat (que sube por encima) y el pie (que deja el hueco). */
+  --alto-barra-pedido: 4rem;
 }

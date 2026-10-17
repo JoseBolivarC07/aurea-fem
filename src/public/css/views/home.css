@@ -516,3 +516,10 @@
   font-weight: 500;
   color: var(--color-primario);
 }
+
+/* Sin "Consultar" en la portada: "Agregar" va debajo del precio y ocupa todo
+   el ancho de la tarjeta en cualquier pantalla. */
+.tarjeta-producto__agregar {
+  width: 100%;
+  margin-top: var(--espacio-3);
+}

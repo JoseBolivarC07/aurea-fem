@@ -95,21 +95,53 @@
   padding-top: var(--espacio-4);
 }
 
-/* ---- Pie de la tarjeta --------------------------------------------------- */
+/* ---- Pie de la tarjeta ---------------------------------------------------
+   Dos filas mientras la tarjeta es estrecha (móvil y la rejilla 2 × 2 de
+   tableta): arriba el precio; abajo "Agregar", que crece, y "Consultar".
+   Desde 64rem la tarjeta es lo bastante ancha para ponerlo todo en una fila. */
 .producto__pie {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--espacio-4);
+  gap: var(--espacio-3);
   padding: var(--espacio-4) var(--espacio-6);
   background-color: var(--color-fondo);
   border-top: 1px solid var(--color-borde-suave);
 }
 
 .producto__precio {
+  flex-basis: 100%;
   font-size: var(--texto-lg);
   font-weight: 500;
   color: var(--color-primario);
+}
+
+.producto__agregar {
+  flex: 1;
+}
+
+/* Sin JavaScript no hay "Agregar" (carrito.css): precio y "Consultar"
+   comparten fila como antes del carrito. */
+html:not(.js-activo) .producto__precio {
+  flex-basis: auto;
+  margin-inline-end: auto;
+}
+
+@media (min-width: 64rem) {
+  .producto__pie {
+    flex-wrap: nowrap;
+  }
+
+  .producto__precio {
+    flex-basis: auto;
+    margin-inline-end: auto;
+  }
+
+  /* Ancho fijo: al cambiar a "Agregado ✓" no empuja a "Consultar". */
+  .producto__agregar {
+    flex: none;
+    min-width: 8.5rem;
+  }
 }
 
 /* ---- Aviso sanitario ----------------------------------------------------- */

@@ -1,0 +1,595 @@
+/* ==========================================================================
+   COMPONENTE: CARRITO (PEDIDO POR WHATSAPP)
+   ==========================================================================
+
+   Móvil primero: las reglas sin media query son las del celular. Desde 48rem
+   el panel deja de ser una hoja inferior y pasa a ser lateral, y la barra
+   fija desaparece (la bolsa de la cabecera basta).
+
+   PARTES DEL COMPONENTE
+     .bolsa            → botón de la cabecera con el contador de unidades
+     .barra-pedido     → barra fija inferior (solo móvil y solo con pedido)
+     .carrito          → capa completa: fondo oscurecido + panel
+     .carrito__panel   → hoja inferior (móvil) o panel lateral (escritorio)
+     .carrito__linea   → cada producto del pedido (la pinta carrito.js)
+     .carrito__pie     → total, "Enviar pedido por WhatsApp" y "Vaciar pedido"
+
+   RELACIÓN CON EL JAVASCRIPT (`components/carrito.js`)
+   El JS solo pone clases y el atributo `hidden`:
+     <html>            .tiene-pedido · .carrito-abierto
+     .carrito          .es-abierto (un frame después de quitarle `hidden`)
+     .bolsa__contador  .es-pulso (600 ms)
+   Nada de aquí debe anular `[hidden]`: a quien se le da un `display` se le
+   repite `[hidden] { display: none }` al lado. El JS se apoya en `[hidden]`
+   para saber si el botón enfocado sigue visible.
+   ========================================================================== */
+
+/* ---- Sin JavaScript no hay pedido ---------------------------------------
+   Sin `js-activo` (lo pone no-fouc.js) nada de esto funcionaría: mejor no
+   mostrar botones que no hacen nada. */
+html:not(.js-activo) .bolsa,
+html:not(.js-activo) [data-agregar],
+html:not(.js-activo) .barra-pedido,
+html:not(.js-activo) .carrito {
+  display: none;
+}
+
+/* ---- Bolsa de la cabecera -----------------------------------------------
+   Gemela de la hamburguesa: 44 px, redonda, borde suave. Dónde se coloca en
+   la cabecera lo decide header.css. */
+.bolsa {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: var(--color-primario);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-completo);
+  background-color: rgba(255, 255, 255, 0.6);
+  transition:
+    background-color var(--transicion),
+    border-color var(--transicion);
+}
+
+.bolsa:hover {
+  background-color: var(--color-superficie);
+  border-color: var(--color-borde-fuerte);
+}
+
+.bolsa .icono {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
+/* Pastilla sobre la esquina. El anillo del color del fondo la despega del
+   borde del botón, como los avisos de las apps del celular. */
+.bolsa__contador {
+  position: absolute;
+  inset-block-start: -0.3rem;
+  inset-inline-end: -0.35rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding-inline: 0.3rem;
+  font-size: var(--texto-xs);
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+  background-color: var(--color-primario);
+  border-radius: var(--radio-completo);
+  box-shadow: 0 0 0 2px var(--color-fondo);
+}
+
+.bolsa__contador[hidden] {
+  display: none;
+}
+
+.bolsa__contador.es-pulso {
+  animation: pulso-contador 600ms var(--curva-suave);
+}
+
+@keyframes pulso-contador {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.25);
+  }
+}
+
+/* ---- Barra fija inferior (móvil) ----------------------------------------
+   Recordatorio permanente de lo que se lleva. Toda la barra es un botón que
+   abre el panel; la píldora "Ver pedido" solo lo hace evidente. El relleno
+   inferior suma la zona segura del iPhone para no quedar bajo la raya de
+   inicio. */
+.barra-pedido {
+  position: fixed;
+  inset-inline: 0;
+  inset-block-end: 0;
+  z-index: var(--capa-cabecera); /* Barra fija de la página, como la cabecera */
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  width: 100%;
+  min-height: calc(var(--alto-barra-pedido) + env(safe-area-inset-bottom, 0px));
+  padding: var(--espacio-2) var(--espacio-4)
+    calc(var(--espacio-2) + env(safe-area-inset-bottom, 0px));
+  font-size: var(--texto-md);
+  font-weight: 500;
+  line-height: 1.3;
+  color: #fff;
+  text-align: start;
+  background: linear-gradient(140deg, var(--color-primario), var(--marca-vino));
+  border-radius: var(--radio-lg) var(--radio-lg) 0 0;
+  box-shadow: 0 -14px 32px -18px rgba(98, 7, 37, 0.6);
+  animation: subir-barra 320ms var(--curva-salida) both;
+}
+
+.barra-pedido[hidden],
+html.menu-abierto .barra-pedido {
+  display: none;
+}
+
+.barra-pedido:focus-visible {
+  outline-color: var(--color-tinta-clara);
+  outline-offset: -4px;
+}
+
+/* El icono de la bolsa dentro de un círculo translúcido. */
+.barra-pedido > .icono {
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-inline-end: var(--espacio-1);
+  padding: 0.6rem;
+  background-color: rgba(255, 255, 255, 0.14);
+  border-radius: var(--radio-completo);
+}
+
+/* Las medidas están ajustadas para que "3 productos · $ 303.000" quepa en
+   una línea a 390 px. En pantallas más estrechas el icono (decorativo) cede
+   su sitio al texto; si aun así no cabe, el resumen pasa a dos líneas. */
+@media (max-width: 23.99rem) {
+  .barra-pedido > .icono {
+    display: none;
+  }
+}
+
+.barra-pedido__accion {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  margin-inline-start: auto; /* "Ver pedido" siempre a la derecha */
+  min-height: 2.5rem;
+  padding-inline: var(--espacio-4);
+  font-size: var(--texto-sm);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: var(--color-primario-oscuro);
+  background-color: var(--color-tinta-clara);
+  border-radius: var(--radio-completo);
+}
+
+@keyframes subir-barra {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+/* Con la barra visible, el pie de página crece lo que ella mide para que su
+   última línea no quede tapada. 4.5rem es el hueco del botón de Aura que ya
+   reserva footer.css. */
+@media (max-width: 47.99rem) {
+  html.tiene-pedido .pie {
+    padding-bottom: calc(
+      var(--espacio-8) + 4.5rem + var(--alto-barra-pedido) + env(safe-area-inset-bottom, 0px)
+    );
+  }
+}
+
+/* ---- Capa del panel -----------------------------------------------------
+   Por encima de todo, chat incluido. Mientras está abierta, la página de
+   fondo no se desplaza. */
+html.carrito-abierto {
+  overflow: hidden;
+}
+
+.carrito {
+  --carrito-margen: var(--espacio-5); /* Margen lateral del contenido */
+
+  position: fixed;
+  inset: 0;
+  z-index: var(--capa-carrito);
+}
+
+.carrito__fondo {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(42, 6, 18, 0.5);
+  opacity: 0;
+  transition: opacity var(--transicion);
+}
+
+.carrito.es-abierto .carrito__fondo {
+  opacity: 1;
+}
+
+/* ---- Panel: hoja inferior en el móvil -----------------------------------
+   Columna flexible: cabecera y pie fijos, la lista en medio se desplaza.
+   Solo transiciona `transform` y con una sola duración (≤ 400 ms):
+   carrito.js oculta la capa con el primer `transitionend` del panel o, si
+   no llega, a los 400 ms. */
+.carrito__panel {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  display: flex;
+  flex-direction: column;
+  max-height: 85vh; /* Respaldo para navegadores sin `dvh` */
+  max-height: 85dvh;
+  background-color: var(--color-superficie);
+  border-radius: var(--radio-xl) var(--radio-xl) 0 0;
+  box-shadow: 0 -24px 60px -24px rgba(42, 6, 18, 0.5);
+  overflow: hidden;
+  transform: translateY(100%);
+  transition: transform var(--transicion);
+}
+
+/* Entra con la curva de salida (rápida y se posa); sale con la suave. */
+.carrito.es-abierto .carrito__panel {
+  transform: none;
+  transition-timing-function: var(--curva-salida);
+}
+
+/* ---- Cabecera del panel: hermana de la del chat -------------------------- */
+.carrito__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-4);
+  flex: none;
+  padding: var(--espacio-3) var(--espacio-3) var(--espacio-3) var(--carrito-margen);
+  color: #fff;
+  background: linear-gradient(140deg, var(--color-primario), var(--marca-vino));
+}
+
+.carrito__cabecera h2 {
+  font-family: var(--fuente-display);
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.carrito__cerrar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: rgba(255, 255, 255, 0.85);
+  border-radius: var(--radio-completo);
+  transition:
+    background-color var(--transicion),
+    color var(--transicion);
+}
+
+.carrito__cerrar:hover {
+  background-color: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+.carrito__cerrar:focus-visible {
+  outline-color: #fff;
+  outline-offset: -2px;
+}
+
+/* ---- Lista de productos -------------------------------------------------- */
+.carrito__lista {
+  flex: 1 1 auto;
+  min-height: 0; /* Sin esto, la lista no encoge y el pie se saldría */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-inline: var(--carrito-margen);
+  scrollbar-width: thin;
+  scrollbar-color: var(--marca-arena) transparent;
+}
+
+/* Vacía no ocupa sitio: así el mensaje de pedido vacío puede centrarse. */
+.carrito__lista:empty {
+  display: none;
+}
+
+/* Cada línea en dos filas:
+     [miniatura] nombre y precio        Quitar
+     [−  2  +]                        subtotal          */
+.carrito__linea {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr) auto;
+  grid-template-areas:
+    'miniatura info quitar'
+    'controles controles subtotal';
+  align-items: center;
+  gap: var(--espacio-3);
+  padding-block: var(--espacio-4);
+}
+
+.carrito__linea + .carrito__linea {
+  border-top: 1px solid var(--color-borde-suave);
+}
+
+.carrito__miniatura {
+  grid-area: miniatura;
+  width: 4rem;
+  height: 3rem;
+  object-fit: cover;
+  border-radius: var(--radio-sm);
+  background-color: var(--marca-coral); /* Mientras carga la foto */
+}
+
+.carrito__info {
+  grid-area: info;
+  min-width: 0;
+}
+
+.carrito__nombre {
+  font-size: var(--texto-md);
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--color-primario-oscuro);
+}
+
+.carrito__precio {
+  font-size: var(--texto-sm);
+  color: var(--color-tinta-suave);
+}
+
+.carrito__quitar {
+  grid-area: quitar;
+  align-self: start;
+  justify-self: end;
+  min-height: 2.75rem;
+  /* El área táctil sobresale a la derecha para que el texto quede alineado
+     con el subtotal de abajo. */
+  padding-inline: var(--espacio-2);
+  margin-inline-end: calc(var(--espacio-2) * -1);
+  margin-block-start: calc(var(--espacio-2) * -1);
+  font-size: var(--texto-sm);
+  color: var(--color-tinta-media);
+  text-decoration: underline;
+  text-decoration-color: var(--color-borde-fuerte);
+  text-underline-offset: 3px;
+  transition: color var(--transicion);
+}
+
+.carrito__quitar:hover {
+  color: var(--color-primario);
+  text-decoration-color: currentColor;
+}
+
+/* Selector de cantidad: una píldora con − y + de 44 px. */
+.carrito__controles {
+  grid-area: controles;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--color-fondo);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-completo);
+}
+
+.carrito__boton-cantidad {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: var(--color-primario);
+  border-radius: var(--radio-completo);
+  transition:
+    background-color var(--transicion-rapida),
+    color var(--transicion-rapida);
+}
+
+.carrito__boton-cantidad:hover:not(:disabled) {
+  background-color: rgba(145, 13, 43, 0.08);
+}
+
+.carrito__boton-cantidad:disabled {
+  color: var(--color-tinta-suave);
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.carrito__cantidad {
+  min-width: 1.75rem;
+  font-weight: 600;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-tinta);
+}
+
+.carrito__subtotal {
+  grid-area: subtotal;
+  justify-self: end;
+  font-size: var(--texto-base);
+  font-weight: 600;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-primario);
+}
+
+/* ---- Pedido vacío -------------------------------------------------------- */
+.carrito__vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacio-4);
+  flex: 1 1 auto;
+  padding: var(--espacio-10) var(--carrito-margen)
+    calc(var(--espacio-10) + env(safe-area-inset-bottom, 0px));
+  text-align: center;
+}
+
+.carrito__vacio[hidden] {
+  display: none;
+}
+
+/* La bolsa dentro de un círculo rosa. Es el mismo trazo del símbolo `i-bolsa`
+   (el sprite no se puede usar desde CSS) y el color va escrito porque un
+   data URI no lee variables: es el rojo primario. */
+.carrito__vacio::before {
+  content: '';
+  width: 4.5rem;
+  height: 4.5rem;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23910d2b' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5.4 8.2h13.2l1 12.3H4.4Z'/%3E%3Cpath d='M8.6 10.6V7.4a3.4 3.4 0 0 1 6.8 0v3.2'/%3E%3C/svg%3E")
+      center / 2rem no-repeat,
+    rgba(238, 173, 174, 0.32);
+  border-radius: var(--radio-completo);
+}
+
+.carrito__vacio p {
+  font-family: var(--fuente-display);
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: var(--color-primario-oscuro);
+}
+
+/* "Ver productos" con el aspecto de un botón de contorno compacto. */
+.carrito__vacio a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding-inline: var(--espacio-6);
+  font-size: var(--texto-sm);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--color-primario);
+  border: 1px solid var(--color-borde-fuerte);
+  border-radius: var(--radio-completo);
+  transition:
+    background-color var(--transicion),
+    border-color var(--transicion),
+    color var(--transicion);
+}
+
+.carrito__vacio a:hover {
+  color: #fff;
+  background-color: var(--color-primario);
+  border-color: var(--color-primario);
+}
+
+/* ---- Pie del panel ------------------------------------------------------
+   Siempre visible al fondo del panel. La sombra hacia arriba lo separa de
+   la lista cuando esta se desplaza por debajo. */
+.carrito__pie {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+  flex: none;
+  padding: var(--espacio-4) var(--carrito-margen)
+    calc(var(--espacio-2) + env(safe-area-inset-bottom, 0px));
+  background-color: var(--color-fondo);
+  border-top: 1px solid var(--color-borde-suave);
+  box-shadow: 0 -14px 24px -22px rgba(98, 7, 37, 0.35);
+}
+
+.carrito__pie[hidden] {
+  display: none;
+}
+
+.carrito__total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--espacio-4);
+  font-size: var(--texto-xs);
+  font-weight: 600;
+  letter-spacing: var(--interletra-media);
+  text-transform: uppercase;
+  color: var(--color-tinta-media);
+}
+
+.carrito__total span {
+  font-size: var(--texto-xl);
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-primario-oscuro);
+}
+
+/* Menos relleno lateral que un botón normal: el texto es largo y a 320 px
+   no cabría con el de `.boton`. */
+.carrito__whatsapp {
+  padding-inline: var(--espacio-4);
+}
+
+.carrito__whatsapp .icono {
+  width: 1.35em;
+  height: 1.35em;
+}
+
+.carrito__vaciar {
+  align-self: center;
+  min-height: 2.75rem;
+  padding-inline: var(--espacio-4);
+  font-size: var(--texto-sm);
+  color: var(--color-tinta-media);
+  text-decoration: underline;
+  text-decoration-color: var(--color-borde-fuerte);
+  text-underline-offset: 3px;
+  transition: color var(--transicion);
+}
+
+.carrito__vaciar:hover {
+  color: var(--color-error);
+  text-decoration-color: currentColor;
+}
+
+/* ---- Tableta y escritorio: panel lateral, sin barra ---------------------- */
+@media (min-width: 48rem) {
+  .barra-pedido {
+    display: none;
+  }
+
+  .carrito {
+    --carrito-margen: var(--espacio-6);
+  }
+
+  .carrito__panel {
+    inset-block-start: 0;
+    inset-inline-start: auto;
+    width: min(26rem, 100%);
+    max-height: none;
+    border-radius: var(--radio-xl) 0 0 var(--radio-xl);
+    box-shadow: -24px 0 60px -24px rgba(42, 6, 18, 0.5);
+    transform: translateX(100%);
+  }
+
+  .carrito__cabecera {
+    padding-block: var(--espacio-4);
+  }
+}
+
+/* ---- Menos movimiento: el panel aparece en su sitio, sin deslizarse ------
+   carrito.js tampoco espera a `transitionend` en este caso. */
+@media (prefers-reduced-motion: reduce) {
+  .carrito__panel,
+  .carrito__fondo {
+    transition: none;
+  }
+
+  .carrito__panel {
+    transform: none;
+  }
+
+  .barra-pedido {
+    animation: none;
+  }
+}

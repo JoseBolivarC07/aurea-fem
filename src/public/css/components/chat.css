@@ -420,3 +420,17 @@ html.menu-abierto .chat {
     justify-content: center;
   }
 }
+
+/* ---- Móvil con pedido: el chat sube por encima de la barra del carrito ----
+   `tiene-pedido` lo pone carrito.js cuando hay unidades; la barra solo existe
+   por debajo de 48rem. Sin esto, el botón de Aura taparía "Ver pedido". El
+   panel se acorta lo mismo para no meterse bajo la cabecera. */
+@media (max-width: 47.99rem) {
+  html.tiene-pedido .chat {
+    inset-block-end: calc(var(--alto-barra-pedido) + env(safe-area-inset-bottom, 0px) + var(--espacio-3));
+  }
+
+  html.tiene-pedido .chat__panel {
+    max-height: calc(100dvh - var(--alto-barra-pedido) - 6rem);
+  }
+}

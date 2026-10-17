@@ -41,7 +41,8 @@
  *   3. typography  → aplica esos tokens al texto
  *   4. layout      → contenedores y ritmo de las secciones
  *   5. animations  → transiciones y fotogramas
- *   6-9. componentes que aparecen en toda página (botón, cabecera, pie, chat)
+ *   6-10. componentes que aparecen en toda página (botón, cabecera, pie, chat,
+ *         carrito)
  */
 const BASE_STYLES = [
   '/css/base/reset.css',
@@ -53,6 +54,7 @@ const BASE_STYLES = [
   '/css/components/header.css',
   '/css/components/footer.css',
   '/css/components/chat.css',
+  '/css/components/carrito.css',
 ];
 
 /**

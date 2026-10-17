@@ -94,10 +94,13 @@
 }
 
 /* ---- Navegación --------------------------------------------------------- */
+/* `margin-inline-start: auto` la empuja a la derecha: así la bolsa del pedido
+   queda pegada a "Escríbenos" y no flotando en el centro de la cabecera. */
 .cabecera__nav {
   display: flex;
   align-items: center;
   gap: var(--espacio-8);
+  margin-inline-start: auto;
 }
 
 .cabecera__lista {
@@ -183,8 +186,31 @@
   transform: rotate(0deg);
 }
 
+/* ---- Escritorio estrecho ------------------------------------------------
+   Justo por encima de 60rem, marca + enlaces + "Escríbenos" + bolsa no caben
+   con los huecos normales y la bolsa se sale del contenedor. */
+@media (min-width: 60.01rem) and (max-width: 64rem) {
+  .cabecera__nav {
+    gap: var(--espacio-6);
+  }
+
+  .cabecera__lista {
+    gap: var(--espacio-4);
+  }
+}
+
 /* ---- Adaptación a pantallas pequeñas ------------------------------------ */
 @media (max-width: 60rem) {
+  /* El menú pasa a ser una capa fija y sale del flujo: la bolsa (fuera del
+     <nav>) se pega a la hamburguesa y forman un par de botones a la derecha. */
+  .cabecera__interior {
+    gap: var(--espacio-2);
+  }
+
+  .bolsa {
+    margin-inline-start: auto;
+  }
+
   .cabecera__hamburguesa {
     display: inline-flex;
     position: relative;
