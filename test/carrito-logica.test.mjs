@@ -194,3 +194,12 @@ test('enlaceWhatsApp: codifica el mensaje y se puede revertir', () => {
   assert.ok(enlace.startsWith(prefijo));
   assert.equal(decodeURIComponent(enlace.slice(prefijo.length)), mensaje);
 });
+
+test('enlaceWhatsApp: el texto va realmente codificado (spec §6)', () => {
+  const mensaje = 'Hola, ¿qué tal?\n- 1 × Té — $ 1';
+  const texto = enlaceWhatsApp('573137156356', mensaje).split('?text=')[1];
+  for (const crudo of ['\n', ' ', '¿', '×', '—', ' ']) {
+    assert.ok(!texto.includes(crudo), `quedó sin codificar: ${JSON.stringify(crudo)}`);
+  }
+  assert.ok(texto.includes('%0A'));
+});

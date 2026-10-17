@@ -213,6 +213,10 @@ export function iniciarCarrito() {
     const importe = formatearPesos(total(pedido, catalogo));
     const hay = cantidad > 0;
     const etiqueta = `Ver tu pedido (${hay ? etiquetaProductos(cantidad) : 'vacío'})`;
+    // Quién tenía el foco antes de redibujar: solo si estaba dentro del panel
+    // tiene sentido rescatarlo (Safari no enfoca los botones al tocarlos).
+    const previo = document.activeElement;
+    const estabaEnPanel = panel.contains(previo);
 
     html.classList.toggle('tiene-pedido', hay);
 
@@ -222,8 +226,8 @@ export function iniciarCarrito() {
       contador.hidden = !hay;
     }
     if (barra) {
+      // Sin aria-label: su nombre accesible es su texto visible (WCAG 2.5.3).
       barra.hidden = !hay;
-      barra.setAttribute('aria-label', etiqueta);
     }
     if (resumen) resumen.textContent = `${etiquetaProductos(cantidad)} · ${importe}`;
 
@@ -243,8 +247,14 @@ export function iniciarCarrito() {
     // Chrome sigue marcando como activo un botón que acaba de quedar dentro de
     // un `[hidden]`, así que también se cuenta como perdido.
     const activo = document.activeElement;
-    const perdido = !panel.contains(activo) || activo.closest('[hidden]');
-    if (estaAbierto() && perdido) botonCerrar.focus();
+    const sigueDentro = panel.contains(activo) && !activo.closest('[hidden]');
+    if (estaAbierto() && estabaEnPanel && !sigueDentro) botonCerrar.focus();
+  }
+
+  /** Relee el almacenamiento: otra pestaña, o la caché de ida y vuelta (bfcache), pudo cambiarlo. */
+  function releer() {
+    pedido = sanear(leerGuardado(), catalogo);
+    pintar();
   }
 
   function cambiar(nuevo) {
@@ -403,9 +413,32 @@ export function iniciarCarrito() {
     const linea = pedido.find((l) => l.id === id);
     if (!linea) return;
     const accion = botonAccion.dataset.accion;
-    if (accion === 'mas') cambiar(cambiarCantidad(pedido, id, linea.cantidad + 1));
-    else if (accion === 'menos') cambiar(cambiarCantidad(pedido, id, linea.cantidad - 1));
-    else if (accion === 'quitar') cambiar(quitar(pedido, id));
+    if (accion === 'mas' || accion === 'menos') {
+      cambiar(cambiarCantidad(pedido, id, linea.cantidad + (accion === 'mas' ? 1 : -1)));
+      const nueva = pedido.find((l) => l.id === id)?.cantidad ?? 0;
+      anunciar(`${buscar(id).nombre}: ${nueva} ${nueva === 1 ? 'unidad' : 'unidades'}`);
+    } else if (accion === 'quitar') cambiar(quitar(pedido, id));
+  });
+
+  // Al volver con "Atrás" la página puede salir de la caché con un pedido viejo
+  // en memoria; si se agregara sobre él se perderían las líneas guardadas.
+  window.addEventListener('pageshow', (evento) => {
+    if (evento.persisted) releer();
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') releer();
+  });
+
+  // El enlace "Ver productos" del panel vacío: si ya se está en esa página,
+  // recargarla sería inútil; solo se cierra el panel.
+  vacio.addEventListener('click', (evento) => {
+    const enlace = evento.target instanceof Element ? evento.target.closest('a[href]') : null;
+    if (!enlace) return;
+    const limpiar = (ruta) => ruta.replace(/(\.html|\/)$/, '');
+    if (limpiar(enlace.pathname) === limpiar(location.pathname)) {
+      evento.preventDefault();
+      cerrar();
+    }
   });
 
   document.addEventListener('keydown', (evento) => {
