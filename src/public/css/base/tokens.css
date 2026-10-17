@@ -131,3 +131,11 @@
      el carrito, el chat (que sube por encima) y el pie (que deja el hueco). */
   --alto-barra-pedido: 4rem;
 }
+
+/* En el celular el mínimo del clamp nunca se aplica (3rem + 6vw ≈ 71 px a
+   390 px de ancho): se fija el mínimo para que las secciones no se alarguen. */
+@media (max-width: 40rem) {
+  :root {
+    --seccion-y: 3rem;
+  }
+}

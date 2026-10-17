@@ -34,6 +34,15 @@ html:not(.js-activo) .carrito {
   display: none;
 }
 
+/* Toques rápidos y repetidos (sumar unidades, agregar) no deben ampliar la
+   página en iOS por el doble toque. */
+.carrito__boton-cantidad,
+[data-agregar],
+.bolsa,
+.barra-pedido {
+  touch-action: manipulation;
+}
+
 /* ---- Bolsa de la cabecera -----------------------------------------------
    Gemela de la hamburguesa: 44 px, redonda, borde suave. Dónde se coloca en
    la cabecera lo decide header.css. */

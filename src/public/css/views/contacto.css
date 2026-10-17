@@ -103,9 +103,11 @@ a.contacto__valor:hover {
   color: var(--color-tinta-media);
 }
 
-/* Los números son enlaces de llamada: se ven igual que el texto en negrita. */
+/* Los números son enlaces de llamada: el subrayado los hace ver tocables. */
 .contacto__urgencia a {
   color: var(--color-primario);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
 
 .contacto__urgencia strong {

@@ -19,6 +19,9 @@ html {
   scroll-behavior: smooth;
   /* Compensa la cabecera fija al saltar a un ancla. */
   scroll-padding-top: 6rem;
+  /* Reserva el hueco de la barra de desplazamiento: al abrir el carrito
+     (overflow: hidden) la página no se corre hacia un lado. */
+  scrollbar-gutter: stable;
 }
 
 body {
