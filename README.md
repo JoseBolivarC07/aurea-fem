@@ -48,7 +48,23 @@ docker build -t aurea-fem .
 docker run -p 3000:3000 --env-file .env aurea-fem
 ```
 
-### Versión pública en GitHub Pages
+### Versión completa en Vercel
+
+https://aurea-fem.vercel.app
+
+Todo funciona: el chat de Aura (con la clave de Gemini guardada en las
+variables de entorno del proyecto en Vercel), el carrito con pedido por
+WhatsApp y el acceso interno. Vercel tiene el disco en solo lectura, así que
+allí el formulario de contacto abre WhatsApp con el mensaje ya escrito en vez
+de guardarlo (`CONTACTO_CANAL`, ver `src/config/index.js`).
+
+- Punto de entrada: `src/index.js` (exporta la app); los estáticos salen de `public/`.
+- Variables en Vercel: `GEMINI_API_KEY`, `GEMINI_MODEL`, `AUTH_MODE`,
+  `AUTH_LOCAL_USER`, `AUTH_LOCAL_PASSWORD`, `SESSION_SECRET`, `NODE_ENV`.
+- Cada push a `main` se publica solo; a mano: `vercel deploy --prod`
+  (`.vercelignore` impide subir `.env`).
+
+### Versión estática en GitHub Pages
 
 https://josebolivarc07.github.io/aurea-fem/
 
