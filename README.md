@@ -61,8 +61,9 @@ de guardarlo (`CONTACTO_CANAL`, ver `src/config/index.js`).
 - Punto de entrada: `src/index.js` (exporta la app); los estáticos salen de `public/`.
 - Variables en Vercel: `GEMINI_API_KEY`, `GEMINI_MODEL`, `AUTH_MODE`,
   `AUTH_LOCAL_USER`, `AUTH_LOCAL_PASSWORD`, `SESSION_SECRET`, `NODE_ENV`.
-- Cada push a `main` se publica solo; a mano: `vercel deploy --prod`
-  (`.vercelignore` impide subir `.env`).
+- Publicar a mano: `vercel deploy --prod` (`.vercelignore` impide subir
+  `.env`). Para que cada push a `main` se publique solo, conecta el
+  repositorio en Vercel: proyecto → Settings → Git → Connect Git Repository.
 
 ### Versión estática en GitHub Pages
 
