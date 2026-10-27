@@ -1,0 +1,5 @@
+# Nunca subir secretos ni datos locales en un despliegue con la CLI.
+.env
+storage/
+dist/
+.superpowers/

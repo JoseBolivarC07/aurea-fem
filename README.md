@@ -73,9 +73,21 @@ con Node o con Docker.
 ├── node_modules/
 ├── storage/                  Mensajes del formulario (se crea solo)
 │
+├── public/                   ── Archivos servidos al navegador ──
+│   ├── css/
+│   │   ├── base/             reset · tokens · typography · layout · animations
+│   │   ├── components/       button · header · footer · chat · form · page-header · carrito
+│   │   └── views/            home · nosotras · servicios · productos · contacto · acceso · error
+│   ├── js/
+│   │   ├── core/             main · nav · reveal · no-fouc
+│   │   ├── components/       chat.js · carrito.js (pantalla) · carrito-logica.js (cálculos puros)
+│   │   └── views/            home · servicios · productos · contacto
+│   └── images/               Logotipo, emblema, favicon y fotos de productos
+│
 └── src/
     ├── config/               Toda la lectura de variables de entorno
     ├── server.js             Construcción de la app Express
+    ├── index.js              Punto de entrada en Vercel (exporta la app)
     │
     ├── middlewares/
     │   ├── layout.js         Sistema de plantillas y CSS por vista
@@ -104,19 +116,8 @@ con Node o con Docker.
     │   ├── routes/
     │   ├── services/         ldap.service.js (preparado, hoy en modo local)
     │   └── views/
-    │
-    └── public/               ── Archivos servidos al navegador ──
-        ├── css/
-        │   ├── base/         reset · tokens · typography · layout · animations
-        │   ├── components/   button · header · footer · chat · form · page-header · carrito
-        │   └── views/        home · nosotras · servicios · productos · contacto · acceso · error
-        ├── js/
-        │   ├── core/         main · nav · reveal · no-fouc
-        │   ├── components/   chat.js · carrito.js (pantalla) · carrito-logica.js (cálculos puros)
-        │   └── views/        home · servicios · productos · contacto
-        └── images/           Logotipo, emblema y favicon en SVG
 
-test/                         Pruebas (`npm test`): lógica del carrito y páginas
+test/                         Pruebas (`npm test`): carrito, páginas y contacto por WhatsApp
 ```
 
 Para correr las pruebas: `npm test`.
@@ -227,7 +228,7 @@ Los dos principales son `#910D2B` y `#E2D5CA`.
 **Tipografía corporativa:** Montserrat, en toda la interfaz.
 **Tipografía de titulares:** Cormorant Garamond, la serif que recoge el
 registro del logotipo. Para usar Montserrat también en los títulos, basta
-cambiar `--fuente-display` en `src/public/css/base/tokens.css`.
+cambiar `--fuente-display` en `public/css/base/tokens.css`.
 
 Todos los colores, tamaños, sombras y tiempos de animación viven en ese mismo
 archivo de tokens: es el único sitio donde tocar para reajustar el diseño.

@@ -15,7 +15,12 @@
       </form>
     </header>
 
-    <% if (mensajes.length === 0) { %>
+    <% if (porWhatsApp) { %>
+    <p class="panel__vacio">
+      En esta publicación los mensajes del formulario de contacto llegan por
+      WhatsApp al <%= brand.phoneDisplay %>, no se guardan aquí.
+    </p>
+    <% } else if (mensajes.length === 0) { %>
     <p class="panel__vacio">Todavía no hay mensajes del formulario de contacto.</p>
     <% } else { %>
     <ul class="panel__mensajes">

@@ -115,9 +115,13 @@ async function iniciarSesion(req, res, next) {
  * `req.sesion` tiene los datos de quien entró.
  */
 function mostrarPanel(req, res) {
+  // Con el canal de WhatsApp no hay archivo que leer (y en Vercel el disco es
+  // de solo lectura: intentar crearlo fallaría).
+  const porWhatsApp = config.contacto.canal === 'whatsapp';
+
   // `slice(-20)` toma los 20 últimos; `reverse()` los pone del más reciente
   // al más antiguo, que es como se espera leer una bandeja de mensajes.
-  const mensajes = mensajeModel.listar().slice(-20).reverse();
+  const mensajes = porWhatsApp ? [] : mensajeModel.listar().slice(-20).reverse();
 
   res.renderPage('panel.view', {
     title: 'Panel interno · Áurea Fem',
@@ -128,6 +132,7 @@ function mostrarPanel(req, res) {
 
     sesion: req.sesion, // Para saludar y mostrar el rol
     mensajes,
+    porWhatsApp,
   });
 }
 

@@ -7,7 +7,8 @@
  * Único controlador del sitio que atiende DOS métodos HTTP sobre la misma
  * dirección:
  *   · GET  /contacto → muestra el formulario vacío.
- *   · POST /contacto → recibe los datos, los valida y los guarda.
+ *   · POST /contacto → recibe los datos, los valida y los guarda (o, si el
+ *                      canal es WhatsApp, abre WhatsApp con el mensaje).
  *
  * Es también el único que escribe datos, así que aquí aparece la validación
  * del lado del servidor. Aunque el navegador ya valida con JavaScript, esa
@@ -15,9 +16,27 @@
  * herramienta externa). La del servidor es la única que de verdad protege.
  */
 
+const config = require('../../config');
+const { brand } = require('../models/site.model');
 const { etapas } = require('../models/etapa.model');
 const mensajeModel = require('../models/mensaje.model');
 const { validarContacto } = require('../../utils/validacion');
+
+const POR_WHATSAPP = config.contacto.canal === 'whatsapp';
+
+/** Texto que llega a WhatsApp, ya validado y limpio. */
+function textoParaWhatsApp(datos) {
+  const etapa = etapas.find((e) => e.id === datos.etapa);
+  return [
+    'Hola, les escribo desde el formulario de contacto de la página.',
+    '',
+    `Nombre: ${datos.nombre}`,
+    `Correo: ${datos.correo}`,
+    ...(etapa ? [`Etapa: ${etapa.nombre}`] : []),
+    '',
+    datos.mensaje,
+  ].join('\n');
+}
 
 // ── BLOQUE 1: Datos comunes de la vista ─────────────────────────────────────
 /**
@@ -56,6 +75,7 @@ function baseVista(extra = {}) {
     valores: {}, //     Lo que la usuaria escribió (para no perderlo si falla)
     errores: {}, //     Mensajes de error por campo
     enviado: false, //  ¿Se muestra el aviso de éxito?
+    porWhatsApp: POR_WHATSAPP, // Cambia el texto del botón y la nota
 
     ...extra,
   };
@@ -84,7 +104,14 @@ function enviar(req, res, next) {
     return res.status(422).renderPage('contacto.view', baseVista({ valores: datos, errores }));
   }
 
-  // 3.3 · Guardado.
+  // 3.3 · Sin disco donde guardar (Vercel): el mensaje sale por WhatsApp.
+  // 303 hace que el navegador siga la redirección con un GET hacia wa.me.
+  if (POR_WHATSAPP) {
+    const texto = encodeURIComponent(textoParaWhatsApp(datos));
+    return res.redirect(303, `https://wa.me/${brand.whatsapp}?text=${texto}`);
+  }
+
+  // 3.4 · Guardado.
   // Se envuelve en try/catch porque escribe en disco y eso puede fallar
   // (disco lleno, permisos, USB desconectada a mitad). `next(error)` lo
   // manda al manejador de errores en vez de tumbar el servidor.
@@ -94,7 +121,7 @@ function enviar(req, res, next) {
     return next(error);
   }
 
-  // 3.4 · Patrón POST → Redirect → GET.
+  // 3.5 · Patrón POST → Redirect → GET.
   //
   // En lugar de responder directamente al POST, se redirige a un GET.
   // ¿Por qué? Porque si se respondiera al POST, al recargar la página el

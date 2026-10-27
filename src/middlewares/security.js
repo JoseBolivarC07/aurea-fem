@@ -44,8 +44,10 @@ const CONTENT_SECURITY_POLICY = [
   // /api/chat, nunca directo a Google desde el navegador.
   "connect-src 'self'",
 
-  // Los formularios solo pueden enviarse a nuestro dominio.
-  "form-action 'self'",
+  // Los formularios solo pueden enviarse a nuestro dominio. WhatsApp se
+  // permite porque el formulario de contacto puede redirigir allí, y los
+  // navegadores aplican esta regla también a las redirecciones.
+  "form-action 'self' https://wa.me https://api.whatsapp.com",
 
   // Nadie puede meter este sitio dentro de un <iframe> (evita clickjacking).
   "frame-ancestors 'none'",

@@ -161,13 +161,23 @@
         </div>
 
         <p class="formulario__nota">
+          <% if (porWhatsApp) { %>
+          Al enviar se abre WhatsApp con tu mensaje ya escrito; solo tienes que
+          tocar enviar. Tus datos se usan únicamente para responderte.
+          <% } else { %>
           Tus datos se usan únicamente para responderte. No los compartimos con
           terceros.
+          <% } %>
         </p>
 
         <button class="boton boton--primario boton--ancho" type="submit">
+          <% if (porWhatsApp) { %>
+          <svg class="icono" aria-hidden="true"><use href="#i-whatsapp"></use></svg>
+          Enviar por WhatsApp
+          <% } else { %>
           Enviar mensaje
           <svg class="icono" aria-hidden="true"><use href="#i-flecha"></use></svg>
+          <% } %>
         </button>
 
       </form>

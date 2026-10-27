@@ -2,7 +2,7 @@
  * PRUEBAS DE LA LÓGICA DEL CARRITO
  * ================================
  *
- * Cubren `src/public/js/components/carrito-logica.js`, que no toca el DOM,
+ * Cubren `public/js/components/carrito-logica.js`, que no toca el DOM,
  * por eso se pueden ejecutar directamente con `node --test`.
  */
 import { test } from 'node:test';
@@ -18,7 +18,7 @@ import {
   formatearPesos,
   armarMensaje,
   enlaceWhatsApp,
-} from '../src/public/js/components/carrito-logica.js';
+} from '../public/js/components/carrito-logica.js';
 
 const catalogo = [
   { id: 'te-rojo', nombre: 'Té Rojo', precio: 100000, imagen: '/images/productos/te-rojo.jpg' },

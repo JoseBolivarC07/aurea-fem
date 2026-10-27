@@ -73,8 +73,9 @@ function createServer() {
   app.use(express.urlencoded({ extended: false, limit: '64kb' }));
 
   // 2.3 · Archivos estáticos: CSS, JavaScript del navegador e imágenes.
-  //      Se sirve la carpeta `src/public` en la raíz del sitio, así que
-  //      `src/public/css/base/tokens.css` se pide como `/css/base/tokens.css`.
+  //      Se sirve la carpeta `public` en la raíz del sitio, así que
+  //      `public/css/base/tokens.css` se pide como `/css/base/tokens.css`.
+  //      En Vercel esta línea no actúa: la CDN sirve `public/` directamente.
   //
   //      En desarrollo la caché se desactiva (maxAge 0) para que al guardar
   //      un CSS baste con recargar; en producción se cachea una semana.

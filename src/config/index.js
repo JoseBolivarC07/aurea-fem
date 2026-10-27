@@ -62,7 +62,9 @@ const config = {
     src: SRC, //                                      Carpeta src/
     views: path.join(SRC, 'app', 'views'), //         Plantillas del sitio
     authViews: path.join(SRC, 'auth', 'views'), //    Plantillas de acceso
-    public: path.join(SRC, 'public'), //              CSS, JS e imágenes
+    // En la raíz y no en src/: Vercel solo sirve archivos estáticos desde
+    // `public/` (allí express.static no se usa).
+    public: path.join(ROOT, 'public'), //             CSS, JS e imágenes
     storage: path.join(ROOT, 'storage'), //           Mensajes de contacto
   },
 
@@ -97,6 +99,15 @@ const config = {
       url: process.env.LDAP_URL || '',
       baseDn: process.env.LDAP_BASE_DN || '',
     },
+  },
+
+  // ---- Formulario de contacto ---------------------------------------------
+  // 'archivo'  → guarda en storage/mensajes.json y se lee en el panel.
+  // 'whatsapp' → abre WhatsApp con el mensaje ya escrito.
+  // Vercel (que define VERCEL=1) tiene el disco en solo lectura, así que allí
+  // el valor por defecto es 'whatsapp'.
+  contacto: {
+    canal: process.env.CONTACTO_CANAL || (process.env.VERCEL ? 'whatsapp' : 'archivo'),
   },
 
   // ---- Límite de peticiones -----------------------------------------------
